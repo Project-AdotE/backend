@@ -17,5 +17,4 @@ public interface AnimalMapper {
     Animal toAnimal(AnimalRequestDTO animalRequestDTO);
 
     AnimalResponseDTO toResponseDTO(Animal animal);
-
 }

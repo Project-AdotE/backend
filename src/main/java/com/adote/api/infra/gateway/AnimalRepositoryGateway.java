@@ -12,6 +12,7 @@ import com.adote.api.infra.persistence.repositories.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,5 +33,24 @@ public class AnimalRepositoryGateway implements AnimalGateway {
             return animalMapper.toAnimal(animalRepository.save(animalEntity));
         }
         return null;
+    }
+
+    @Override
+    public List<Animal> getAnimaisByOrganizationId(Long id) {
+        Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(id);
+        if (organizacaoOptional.isPresent()) {
+            List<AnimalEntity> animalList = animalRepository.findAllByOrganizacao_Id(id);
+            return animalList.stream()
+                    .map(animalMapper::toAnimal)
+                    .toList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Animal> getAllAnimaisCase() {
+        return animalRepository.findAll().stream()
+                .map(animalMapper::toAnimal)
+                .toList();
     }
 }

@@ -19,8 +19,6 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         JsonNode secret = awsSecretManagerService.getSecret();
 
-        System.out.println("Segredo recuperado do AWS Secrets Manager: " + secret.toPrettyString());
-
         String host = getJsonValue(secret, "host");
         String port = getJsonValue(secret, "port");
         String username = getJsonValue(secret, "username");
