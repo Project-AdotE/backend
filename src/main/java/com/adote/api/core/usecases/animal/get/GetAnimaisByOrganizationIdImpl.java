@@ -15,6 +15,6 @@ public class GetAnimaisByOrganizationIdImpl implements GetAnimaisByOrganizationI
 
     @Override
     public List<Animal> execute(Long id) {
-        return List.of();
+        return animalGateway.getAnimaisByOrganizationId(id);
     }
 }
