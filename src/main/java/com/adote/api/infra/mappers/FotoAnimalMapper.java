@@ -13,4 +13,5 @@ public interface FotoAnimalMapper {
 
     FotoAnimal toFoto(FotoAnimalEntity fotoAnimalEntity);
 
+
 }

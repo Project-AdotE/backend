@@ -9,8 +9,10 @@ import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
 import com.adote.api.infra.mappers.AnimalMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -42,12 +44,17 @@ public class AnimalController {
 
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AnimalResponseDTO> createAnimal(@RequestBody AnimalRequestDTO requestDTO) {
-        Animal newAnimal = createAnimalCase.execute(requestDTO);
+    @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<AnimalResponseDTO> createAnimal(
+            @RequestPart("dados") AnimalRequestDTO requestDTO,
+            @RequestPart(value = "fotos", required = false) List<MultipartFile> fotos) {
+
+        Animal newAnimal = createAnimalCase.execute(requestDTO, fotos);
+
         if (newAnimal == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
     }
 

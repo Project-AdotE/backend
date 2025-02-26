@@ -9,6 +9,8 @@ import com.adote.api.infra.persistence.repositories.FotoAnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class FotoAnimalRepositoryGateway implements FotoAnimalGateway {
@@ -20,5 +22,18 @@ public class FotoAnimalRepositoryGateway implements FotoAnimalGateway {
     public FotoAnimal createFotoAnimal(FotoAnimal fotoAnimal) {
         FotoAnimalEntity newEntity = fotoAnimalRepository.save(fotoAnimalMapper.toEntity(fotoAnimal));
         return fotoAnimalMapper.toFoto(newEntity);
+    }
+
+
+    public List<FotoAnimal> createMultipleFotos(List<FotoAnimal> fotos) {
+        List<FotoAnimalEntity> entities = fotos.stream()
+                .map(fotoAnimalMapper::toEntity)
+                .toList();
+
+        List<FotoAnimalEntity> savedEntities = fotoAnimalRepository.saveAll(entities);
+
+        return savedEntities.stream()
+                .map(fotoAnimalMapper::toFoto)
+                .toList();
     }
 }
