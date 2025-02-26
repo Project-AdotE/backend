@@ -13,6 +13,7 @@ public record AnimalResponseDTO(
         SexoEnum sexo,
         PorteEnum porte,
         Boolean vacinado,
-        OrganizacaoResponseDTO organizacao
+        OrganizacaoResponseDTO organizacao,
+        List<FotoAnimalResponseDTO> fotos
 ) {
 }

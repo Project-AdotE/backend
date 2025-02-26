@@ -17,6 +17,7 @@ public interface AnimalMapper {
 
     AnimalEntity toEntity(AnimalRequestDTO animalRequestDTO);
 
+    @Mapping(target = "fotos", qualifiedByName = "mapWithoutAnimal")
     Animal toAnimal(AnimalEntity animalEntity);
 
     AnimalResponseDTO toResponseDTO(Animal animal);

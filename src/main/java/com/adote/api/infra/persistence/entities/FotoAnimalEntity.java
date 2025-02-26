@@ -1,6 +1,7 @@
 package com.adote.api.infra.persistence.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class FotoAnimalEntity {
     @Column(name = "url", nullable = false)
     private String url;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "animal_id", nullable = false)
     private AnimalEntity animal;

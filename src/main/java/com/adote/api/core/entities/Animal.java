@@ -10,5 +10,6 @@ public record Animal(Long id,
                      SexoEnum sexo,
                      PorteEnum porte,
                      Boolean vacinado,
-                     Organizacao organizacao) {
+                     Organizacao organizacao,
+                     List<FotoAnimal> fotos) {
 }
