@@ -8,6 +8,5 @@ public record Animal(Long id,
                      SexoEnum sexo,
                      PorteEnum porte,
                      Boolean vacinado,
-                     String url_foto,
                      Organizacao organizacao) {
 }

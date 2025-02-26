@@ -32,9 +32,6 @@ public class AnimalEntity {
     @Column(name = "vacinado", nullable = false)
     private Boolean vacinado;
 
-    @Column(name = "url_foto")
-    private String url_foto;
-
     @ManyToOne
     @JoinColumn(name = "organizacao_id", nullable = false)
     private OrganizacaoEntity organizacao;

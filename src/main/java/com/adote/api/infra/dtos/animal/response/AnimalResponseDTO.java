@@ -10,7 +10,6 @@ public record AnimalResponseDTO(
         SexoEnum sexo,
         PorteEnum porte,
         Boolean vacinado,
-        String url_foto,
         OrganizacaoResponseDTO organizacao
 ) {
 }
