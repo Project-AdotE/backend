@@ -1,0 +1,6 @@
+CREATE TABLE foto_animal (
+    id BIGSERIAL PRIMARY KEY,
+    url VARCHAR(255) NOT NULL,
+    animal_id BIGINT NOT NULL,
+    FOREIGN KEY (animal_id) REFERENCES animal(id) ON DELETE CASCADE
+);

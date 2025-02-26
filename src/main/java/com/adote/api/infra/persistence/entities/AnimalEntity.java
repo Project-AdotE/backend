@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -36,4 +38,6 @@ public class AnimalEntity {
     @JoinColumn(name = "organizacao_id", nullable = false)
     private OrganizacaoEntity organizacao;
 
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<FotoAnimalEntity> fotos;
 }
