@@ -3,7 +3,6 @@ package com.adote.api.infra.gateway;
 import com.adote.api.core.entities.FotoAnimal;
 import com.adote.api.core.gateway.FotoAnimalGateway;
 import com.adote.api.infra.mappers.FotoAnimalMapper;
-import com.adote.api.infra.persistence.entities.AnimalEntity;
 import com.adote.api.infra.persistence.entities.FotoAnimalEntity;
 import com.adote.api.infra.persistence.repositories.FotoAnimalRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +34,11 @@ public class FotoAnimalRepositoryGateway implements FotoAnimalGateway {
         return savedEntities.stream()
                 .map(fotoAnimalMapper::toFoto)
                 .toList();
+    }
+
+    @Override
+    public List<FotoAnimal> getFotosByAnimalId(Long id) {
+        List<FotoAnimalEntity> entityList = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
+        return entityList.stream().map(fotoAnimalMapper::toFoto).toList();
     }
 }

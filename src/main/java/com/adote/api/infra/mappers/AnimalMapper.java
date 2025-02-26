@@ -5,16 +5,22 @@ import com.adote.api.core.entities.Animal;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
 import com.adote.api.infra.persistence.entities.AnimalEntity;
+import com.adote.api.infra.persistence.entities.FotoAnimalEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Mapper(componentModel = "spring", uses = FotoAnimalMapper.class)
 public interface AnimalMapper {
 
-    AnimalEntity toEntity(Animal animal);
     AnimalEntity toEntity(AnimalRequestDTO animalRequestDTO);
 
     Animal toAnimal(AnimalEntity animalEntity);
-    Animal toAnimal(AnimalRequestDTO animalRequestDTO);
 
     AnimalResponseDTO toResponseDTO(Animal animal);
+
+    AnimalEntity toEntity(Animal animal);
 }
+

@@ -2,10 +2,7 @@ package com.adote.api.infra.config;
 
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.gateway.AnimalGateway;
-import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
-import com.adote.api.core.usecases.animal.get.GetAllAnimaisCaseImpl;
-import com.adote.api.core.usecases.animal.get.GetAnimaisByOrganizationId;
-import com.adote.api.core.usecases.animal.get.GetAnimaisByOrganizationIdImpl;
+import com.adote.api.core.usecases.animal.get.*;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCaseImpl;
 import com.adote.api.infra.gateway.AnimalRepositoryGateway;
@@ -32,6 +29,12 @@ public class AnimalUseCasesConfig{
     @Bean
     public GetAllAnimaisCase getAllAnimaisCase(){
         return new GetAllAnimaisCaseImpl(animalRepositoryGateway);
+    }
+
+
+    @Bean
+    public GetAnimalByIdCase getAnimalByIdCase(){
+        return new GetAnimalByIdCaseImpl(animalRepositoryGateway);
     }
 
 }

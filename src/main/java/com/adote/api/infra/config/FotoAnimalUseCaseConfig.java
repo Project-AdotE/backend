@@ -1,5 +1,7 @@
 package com.adote.api.infra.config;
 
+import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByAnimalIdCase;
+import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByAnimalIdCaseImpl;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateFotoAnimalCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateFotoAnimalCaseImpl;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
@@ -24,5 +26,6 @@ public class FotoAnimalUseCaseConfig {
     public CreateMultipleFotosCase createMultipleFotosCase() {
         return new CreateMultipleFotosCaseImpl(fotoAnimalRepositoryGateway);
     }
+
 
 }

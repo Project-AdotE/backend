@@ -12,7 +12,6 @@ import com.adote.api.infra.mappers.AnimalMapper;
 import com.adote.api.infra.mappers.FotoAnimalMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.AnimalEntity;
-import com.adote.api.infra.persistence.entities.FotoAnimalEntity;
 import com.adote.api.infra.persistence.repositories.AnimalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -29,7 +28,6 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     private final GetOrganizacaoById getOrganizacaoById;
     private final CreateMultipleFotosCase createMultipleFotosCase;
     private final AnimalMapper animalMapper;
-    private final FotoAnimalMapper fotoAnimalMapper;
     private final OrganizacaoMapper organizacaoMapper;
     private final S3StorageService s3StorageService;
 
@@ -75,5 +73,15 @@ public class AnimalRepositoryGateway implements AnimalGateway {
         return animalRepository.findAll().stream()
                 .map(animalMapper::toAnimal)
                 .toList();
+    }
+
+    @Override
+    public Optional<Animal> getAnimalById(Long id) {
+        Optional<AnimalEntity> animalOpt = animalRepository.findById(id);
+        if (animalOpt.isPresent()) {
+            AnimalEntity animalEntity = animalOpt.get();
+            return Optional.of(animalMapper.toAnimal(animalEntity));
+        }
+        return Optional.empty();
     }
 }

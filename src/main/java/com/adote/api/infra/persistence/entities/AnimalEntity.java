@@ -2,6 +2,7 @@ package com.adote.api.infra.persistence.entities;
 
 import com.adote.api.core.Enums.PorteEnum;
 import com.adote.api.core.Enums.SexoEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

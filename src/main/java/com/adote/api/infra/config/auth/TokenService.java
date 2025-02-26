@@ -26,6 +26,7 @@ public class TokenService {
                 .withClaim("organizacao_id", organizacao.getId())
                 .withClaim("organizacao_name", organizacao.getNome())
                 .withIssuedAt(Instant.now())
+                .withExpiresAt(Instant.now().plusSeconds(60 * 60 * 24))
                 .withIssuer("API Adote")
                 .sign(algorithm);
     }

@@ -44,6 +44,7 @@ public class AnimalController {
 
     }
 
+
     @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> createAnimal(
             @RequestPart("dados") AnimalRequestDTO requestDTO,
@@ -57,7 +58,5 @@ public class AnimalController {
 
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
     }
-
-    
 
 }
