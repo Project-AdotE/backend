@@ -65,7 +65,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
                     .map(animalMapper::toAnimal)
                     .toList();
         }
-        return null;
+        return List.of();
     }
 
     @Override

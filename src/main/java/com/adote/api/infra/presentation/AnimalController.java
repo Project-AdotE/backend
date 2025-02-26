@@ -38,6 +38,9 @@ public class AnimalController {
         }
 
         List<Animal> animalList = getAnimaisByOrganizationId.execute(orgId);
+        if(animalList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok().body(animalList.stream()
                 .map(animalMapper::toResponseDTO)
                 .toList());
