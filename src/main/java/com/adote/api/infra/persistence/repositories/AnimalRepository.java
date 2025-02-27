@@ -11,5 +11,7 @@ public interface AnimalRepository extends JpaRepository<AnimalEntity, Integer> {
 
     List<AnimalEntity> findAllByOrganizacao_Id(Long organizacaoId);
 
+    List<AnimalEntity> findAllByOrganizacao_IdOrderBy
+
     Optional<AnimalEntity> findById(Long id);
 }
