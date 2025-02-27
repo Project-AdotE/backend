@@ -23,15 +23,15 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Criar arquivo da chave privada
-        run: echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
-
-      - name: Definir permissões da chave
-        run: chmod 600 private_key.pem
+        run: |
+          printf "%s" "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
 
       - name: Criar diretório SSH e adicionar EC2 ao known_hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Transferir o arquivo JAR para a EC2
         run: scp -o StrictHostKeyChecking=no -i private_key.pem target/*.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/api.jar
