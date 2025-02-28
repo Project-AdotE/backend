@@ -1,12 +1,14 @@
 package com.adote.api.infra.config.auth;
 
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.infra.config.secrets.JWTConfig;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +16,16 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class TokenService {
 
-    @Value("${adote.security.secret}")
-    private String secret;
+    private final JWTConfig jwtConfig;
+
+//    @Value("${adote.security.secret}")
+//    private String secret;
 
     public String generateToken(OrganizacaoEntity organizacao) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
+        Algorithm algorithm = Algorithm.HMAC256(jwtConfig.getSecret());
         return JWT.create()
                 .withSubject(organizacao.getEmail())
                 .withClaim("organizacao_id", organizacao.getId())
@@ -33,7 +38,7 @@ public class TokenService {
 
     public Optional<JWTUserData> verifyToken(String token) {
         try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = Algorithm.HMAC256(jwtConfig.getSecret());
 
             DecodedJWT jwt = JWT.require(algorithm)
                     .build()
