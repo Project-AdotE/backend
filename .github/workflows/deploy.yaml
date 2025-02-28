@@ -14,18 +14,12 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh  # Garante que o diretório existe
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-
-      - name: Copy files with SSH
+      - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@main
         with:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          target: ${{ secrets.TARGET_DIR }}
-          source: "./"
-          args: "-rltgoDzvO --delete"
+          TARGET: ${{ secrets.TARGET_DIR }}
+          SOURCE: "./"
+          ARGS: "-rltgoDzvO --delete"
