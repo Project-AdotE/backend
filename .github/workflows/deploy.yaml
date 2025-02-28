@@ -14,12 +14,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: Ensure SSH key is loaded
-        run: |
-          chmod 600 ~/.ssh/deploy_key_***
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/deploy_key_***
-
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@main
         with:
