@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 
 public record AnimalResponseDTO(
+        Long id,
         String nome,
         SexoEnum sexo,
         PorteEnum porte,

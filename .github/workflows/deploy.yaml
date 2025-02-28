@@ -23,3 +23,15 @@ jobs:
           TARGET: ${{ secrets.TARGET_DIR }}
           SOURCE: "./"
           ARGS: "-rltgoDzvO --delete"
+
+      - name: Recompile and restart service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            chmod +x mvnw
+            ./mvnw clean package
+            sudo systemctl restart spring-api
