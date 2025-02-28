@@ -9,6 +9,9 @@ import com.adote.api.infra.dtos.organizacao.response.LoginResponseDTO;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/adote/auth")
 @RequiredArgsConstructor
+@Tag(name = "Autenticação", description = "Responsável pela autenticação de usuários")
 public class AuthController {
 
     private final CreateOrganizacaoCase createOrganizacaoCase;
@@ -30,6 +34,8 @@ public class AuthController {
     private final OrganizacaoMapper organizacaoMapper;
     private final TokenService tokenService;
 
+    @Operation(summary = "Login", description = "Login de usuários na plataforma")
+    @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginOrganizacao(@RequestBody LoginRequestDTO requestDTO) {
         UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(requestDTO.email(), requestDTO.senha());
@@ -41,6 +47,8 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
+    @Operation(summary = "Registro", description = "Registro de usuários na plataforma")
+    @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso")
     @PostMapping("/register")
     public ResponseEntity<OrganizacaoResponseDTO> createOrganizacao(@RequestBody OrganizacaoRequestDTO requestDTO) {
         Organizacao newOrganizacao = createOrganizacaoCase.execute(organizacaoMapper.toOrganizacao(requestDTO));

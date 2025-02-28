@@ -5,6 +5,7 @@ import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/organizacao")
 @RequiredArgsConstructor
+@Tag(name = "Organização", description = "Responsavel pelo gerenciamento de organizações")
 public class OrganizacaoController {
 
     private final GetOrganizacaoById getOrganizacaoById;
