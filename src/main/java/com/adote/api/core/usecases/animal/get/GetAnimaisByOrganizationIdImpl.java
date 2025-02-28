@@ -2,8 +2,8 @@ package com.adote.api.core.usecases.animal.get;
 
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.gateway.AnimalGateway;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public class GetAnimaisByOrganizationIdImpl implements GetAnimaisByOrganizationId {
 
@@ -14,7 +14,7 @@ public class GetAnimaisByOrganizationIdImpl implements GetAnimaisByOrganizationI
     }
 
     @Override
-    public List<Animal> execute(Long id) {
-        return animalGateway.getAnimaisByOrganizationId(id);
+    public Page<Animal> execute(Long id, Pageable pageable) {
+        return animalGateway.getAnimaisByOrganizationId(id, pageable);
     }
 }

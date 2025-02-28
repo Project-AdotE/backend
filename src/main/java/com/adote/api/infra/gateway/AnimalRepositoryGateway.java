@@ -15,6 +15,9 @@ import com.adote.api.infra.persistence.entities.AnimalEntity;
 import com.adote.api.infra.persistence.repositories.AnimalRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,22 +61,19 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     }
 
     @Override
-    public List<Animal> getAnimaisByOrganizationId(Long id) {
+    public Page<Animal> getAnimaisByOrganizationId(Long id, Pageable pageable) {
         Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(id);
         if (organizacaoOptional.isPresent()) {
-            List<AnimalEntity> animalList = animalRepository.findAllByOrganizacao_Id(id);
-            return animalList.stream()
-                    .map(animalMapper::toAnimal)
-                    .toList();
+            Page<AnimalEntity> animalPage = animalRepository.findAllByOrganizacao_Id(id, pageable);
+            return animalPage.map(animalMapper::toAnimal);
         }
-        return List.of();
+        return Page.empty();
     }
 
     @Override
-    public List<Animal> getAllAnimaisCase() {
-        return animalRepository.findAll().stream()
-                .map(animalMapper::toAnimal)
-                .toList();
+    public Page<Animal> getAllAnimaisCase(Pageable pageable) {
+        Page<AnimalEntity> animalPage = animalRepository.findAll(pageable);
+        return animalPage.map(animalMapper::toAnimal);
     }
 
     @Override
