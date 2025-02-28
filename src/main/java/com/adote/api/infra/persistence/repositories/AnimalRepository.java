@@ -12,4 +12,7 @@ public interface AnimalRepository extends JpaRepository<AnimalEntity, Integer> {
     List<AnimalEntity> findAllByOrganizacao_Id(Long organizacaoId);
 
     Optional<AnimalEntity> findById(Long id);
+
+    void deleteById(Long id);
+
 }

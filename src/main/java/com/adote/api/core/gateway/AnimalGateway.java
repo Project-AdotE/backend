@@ -17,4 +17,6 @@ public interface AnimalGateway {
 
     Optional<Animal> getAnimalById(Long id);
 
+    void deleteAnimalById(Long id);
+
 }

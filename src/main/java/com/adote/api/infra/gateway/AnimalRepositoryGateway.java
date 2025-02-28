@@ -13,6 +13,7 @@ import com.adote.api.infra.mappers.FotoAnimalMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.AnimalEntity;
 import com.adote.api.infra.persistence.repositories.AnimalRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,5 +84,14 @@ public class AnimalRepositoryGateway implements AnimalGateway {
             return Optional.of(animalMapper.toAnimal(animalEntity));
         }
         return Optional.empty();
+    }
+
+
+    @Transactional
+    @Override
+    public void deleteAnimalById(Long id) {
+        this.getAnimalById(id).ifPresent(animal -> {
+            animalRepository.deleteById(animal.id());
+        });
     }
 }

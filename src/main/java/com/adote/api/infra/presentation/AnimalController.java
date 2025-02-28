@@ -1,6 +1,7 @@
 package com.adote.api.infra.presentation;
 
 import com.adote.api.core.entities.Animal;
+import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCase;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
 import com.adote.api.core.usecases.animal.get.GetAnimaisByOrganizationId;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
@@ -29,6 +30,7 @@ public class AnimalController {
     private final CreateAnimalCase createAnimalCase;
     private final GetAnimaisByOrganizationId getAnimaisByOrganizationId;
     private final GetAllAnimaisCase getAllAnimaisCase;
+    private final DeleteAnimalByIdCase deleteAnimalByIdCase;
     private final AnimalMapper animalMapper;
 
     @Operation(summary = "Busca de animais", description = "Busca por todos os animais ou por organização",
@@ -65,6 +67,12 @@ public class AnimalController {
         }
 
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAnimalById(@RequestParam Long animalId) {
+        deleteAnimalByIdCase.execute(animalId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
