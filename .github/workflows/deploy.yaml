@@ -24,7 +24,7 @@ jobs:
           SOURCE: "./"
           ARGS: "-rltgoDzvO --delete"
 
-      - name: Recompile and restart service
+      - name: Build and restart service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
