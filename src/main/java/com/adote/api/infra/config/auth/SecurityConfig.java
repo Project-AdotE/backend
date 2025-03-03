@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/adote/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/animal/find/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/animal/find").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

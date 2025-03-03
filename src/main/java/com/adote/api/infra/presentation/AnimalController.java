@@ -4,7 +4,9 @@ import com.adote.api.core.entities.Animal;
 import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCase;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
 import com.adote.api.core.usecases.animal.get.GetAnimaisByOrganizationId;
+import com.adote.api.core.usecases.animal.get.GetAnimalByIdCase;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
+import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
 import com.adote.api.infra.mappers.AnimalMapper;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,6 +39,8 @@ public class AnimalController {
     private final CreateAnimalCase createAnimalCase;
     private final GetAnimaisByOrganizationId getAnimaisByOrganizationId;
     private final GetAllAnimaisCase getAllAnimaisCase;
+    private final GetOrganizacaoById getOrganizacaoById;
+    private final GetAnimalByIdCase getAnimalByIdCase;
     private final DeleteAnimalByIdCase deleteAnimalByIdCase;
     private final AnimalMapper animalMapper;
 
@@ -53,6 +58,9 @@ public class AnimalController {
         if (orgId == null) {
             animalPage = getAllAnimaisCase.execute(pageable);
         } else {
+            if(getOrganizacaoById.execute(orgId).isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
             animalPage = getAnimaisByOrganizationId.execute(orgId, pageable);
         }
 
@@ -67,6 +75,15 @@ public class AnimalController {
         response.put("totalPages", animalPage.getTotalPages());
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<AnimalResponseDTO> findAnimalById(@RequestParam Long id) {
+        Optional<Animal> animal = getAnimalByIdCase.execute(id);
+        if(animal.isPresent()) {
+            return ResponseEntity.ok(animalMapper.toResponseDTO(animal.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
