@@ -64,7 +64,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     public Page<Animal> getAnimaisByOrganizationId(Long id, Pageable pageable) {
         Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(id);
         if (organizacaoOptional.isPresent()) {
-            Page<AnimalEntity> animalPage = animalRepository.findAllByOrganizacao_Id(id, pageable);
+            Page<AnimalEntity> animalPage = animalRepository.findAllByOrganizacao_IdOrderByCreatedAtDesc(id, pageable);
             return animalPage.map(animalMapper::toAnimal);
         }
         return Page.empty();
@@ -72,7 +72,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     @Override
     public Page<Animal> getAllAnimaisCase(Pageable pageable) {
-        Page<AnimalEntity> animalPage = animalRepository.findAll(pageable);
+        Page<AnimalEntity> animalPage = animalRepository.findAllByOrderByCreatedAtDesc(pageable);
         return animalPage.map(animalMapper::toAnimal);
     }
 

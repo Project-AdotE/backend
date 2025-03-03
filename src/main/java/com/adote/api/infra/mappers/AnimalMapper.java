@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = FotoAnimalMapper.class)
 public interface AnimalMapper {
 
+    @Mapping(target = "descricao", source = "descricao")
     AnimalEntity toEntity(AnimalRequestDTO animalRequestDTO);
 
     @Mapping(target = "fotos", qualifiedByName = "mapWithoutAnimal")

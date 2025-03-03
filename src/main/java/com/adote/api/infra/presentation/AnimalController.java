@@ -47,7 +47,6 @@ public class AnimalController {
             @RequestParam(required = false) Long orgId,
             @RequestParam(defaultValue = "0") int page) {
 
-        // Criar o Pageable com PageRequest
         Pageable pageable = PageRequest.of(page, 5);
 
         Page<Animal> animalPage;
@@ -57,12 +56,10 @@ public class AnimalController {
             animalPage = getAnimaisByOrganizationId.execute(orgId, pageable);
         }
 
-        // Mapear os resultados para DTOs
         List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
                 .map(animalMapper::toResponseDTO)
                 .collect(Collectors.toList());
 
-        // Criar a resposta
         Map<String, Object> response = new HashMap<>();
         response.put("animals", animalResponseDTOList);
         response.put("currentPage", animalPage.getNumber());
@@ -71,30 +68,13 @@ public class AnimalController {
 
         return ResponseEntity.ok().body(response);
     }
-//    @GetMapping("/find/all")
-//    public ResponseEntity<List<AnimalResponseDTO>> findAll(
-//            @RequestParam(required = false) Long orgId) {
-//
-//        if(orgId == null) {
-//            List<Animal> animalList = getAllAnimaisCase.execute();
-//            return ResponseEntity.ok().body(animalList.stream()
-//                    .map(animalMapper::toResponseDTO)
-//                    .toList());
-//        }
-//
-//        List<Animal> animalList = getAnimaisByOrganizationId.execute(orgId);
-//        return ResponseEntity.ok().body(animalList.stream()
-//                .map(animalMapper::toResponseDTO)
-//                .toList());
-//
-//    }
-
 
     @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> createAnimal(
             @RequestPart("dados") AnimalRequestDTO requestDTO,
             @RequestPart(value = "fotos", required = false) List<MultipartFile> fotos) {
 
+        System.out.println("descrição recebida: " + requestDTO.descricao());
         Animal newAnimal = createAnimalCase.execute(requestDTO, fotos);
 
         if (newAnimal == null) {
