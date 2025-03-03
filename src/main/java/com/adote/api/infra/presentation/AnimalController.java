@@ -5,6 +5,7 @@ import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCase;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
 import com.adote.api.core.usecases.animal.get.GetAnimaisByOrganizationId;
 import com.adote.api.core.usecases.animal.get.GetAnimalByIdCase;
+import com.adote.api.core.usecases.animal.patch.UpdateAnimalCase;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
@@ -38,6 +39,7 @@ public class AnimalController {
 
     private final CreateAnimalCase createAnimalCase;
     private final GetAnimaisByOrganizationId getAnimaisByOrganizationId;
+    private final UpdateAnimalCase updateAnimalCase;
     private final GetAllAnimaisCase getAllAnimaisCase;
     private final GetOrganizacaoById getOrganizacaoById;
     private final GetAnimalByIdCase getAnimalByIdCase;
@@ -99,6 +101,22 @@ public class AnimalController {
         }
 
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
+    }
+
+    @PatchMapping(value = "update/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<AnimalResponseDTO> updateAnimal(
+            @PathVariable Long id,
+            @RequestPart(value = "dados", required = false) AnimalRequestDTO requestDTO,
+            @RequestPart(value = "novasFotos", required = false) List<MultipartFile> novasFotos,
+            @RequestPart(value = "fotosParaRemover", required = false) List<String> fotosParaRemover) {
+
+        Animal updatedAnimal = updateAnimalCase.execute(id, requestDTO, novasFotos, fotosParaRemover);
+
+        if (updatedAnimal == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(animalMapper.toResponseDTO(updatedAnimal));
     }
 
     @DeleteMapping("/delete")

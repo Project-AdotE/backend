@@ -2,6 +2,7 @@ package com.adote.api.infra.config;
 
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByAnimalIdCase;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByAnimalIdCaseImpl;
+import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCaseImpl;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateFotoAnimalCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateFotoAnimalCaseImpl;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
@@ -27,5 +28,9 @@ public class FotoAnimalUseCaseConfig {
         return new CreateMultipleFotosCaseImpl(fotoAnimalRepositoryGateway);
     }
 
+    @Bean
+    public GetFotoByUrlCaseImpl getFotoByUrlCase() {
+        return new GetFotoByUrlCaseImpl(fotoAnimalRepositoryGateway);
+    }
 
 }

@@ -6,6 +6,7 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -40,5 +41,28 @@ public class S3StorageService {
         } catch (IOException e) {
             throw new RuntimeException("Erro ao fazer upload para o S3", e);
         }
+    }
+
+    public void deleteFile(String fileUrl) {
+        try {
+            String fileName = extractKeyFromUrl(fileUrl);
+
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(BUCKET_NAME)
+                    .key(fileName)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar arquivo do S3: " + fileUrl, e);
+        }
+    }
+
+    private String extractKeyFromUrl(String fileUrl) {
+        String urlPrefix = String.format("https://%s.s3.%s.amazonaws.com/", BUCKET_NAME, REGION.id());
+        if (fileUrl.startsWith(urlPrefix)) {
+            return fileUrl.substring(urlPrefix.length());
+        }
+        throw new IllegalArgumentException("URL não corresponde ao formato esperado: " + fileUrl);
     }
 }

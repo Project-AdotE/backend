@@ -4,6 +4,8 @@ import com.adote.api.core.entities.Animal;
 import com.adote.api.core.gateway.AnimalGateway;
 import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCaseImpl;
 import com.adote.api.core.usecases.animal.get.*;
+import com.adote.api.core.usecases.animal.patch.UpdateAnimalCase;
+import com.adote.api.core.usecases.animal.patch.UpdateAnimalCaseImpl;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCaseImpl;
 import com.adote.api.infra.gateway.AnimalRepositoryGateway;
@@ -41,6 +43,11 @@ public class AnimalUseCasesConfig{
     @Bean
     public DeleteAnimalByIdCaseImpl deleteAnimalByIdCase(){
         return new DeleteAnimalByIdCaseImpl(animalRepositoryGateway);
+    }
+
+    @Bean
+    public UpdateAnimalCaseImpl updateAnimalCase(){
+        return new UpdateAnimalCaseImpl(animalRepositoryGateway);
     }
 
 }

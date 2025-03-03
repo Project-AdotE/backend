@@ -12,10 +12,9 @@ public interface FotoAnimalMapper {
 
     FotoAnimalEntity toEntity(FotoAnimal fotoAnimal);
 
-    // Add explicit mappings to avoid constructor issues
     @Mapping(target = "id", source = "id")
     @Mapping(target = "url", source = "url")
-    @Mapping(target = "animal", source = "animal")
+    @Mapping(target = "animal", source = "animal", ignore = true)
     FotoAnimal toFoto(FotoAnimalEntity fotoAnimalEntity);
 
     @Named("mapWithoutAnimal")

@@ -19,6 +19,8 @@ public interface AnimalGateway {
 
     Optional<Animal> getAnimalById(Long id);
 
+    Animal updateAnimal(Long id, AnimalRequestDTO animalRequestDTO, List<MultipartFile> novasFotos, List<String> fotosParaRemover);
+
     void deleteAnimalById(Long id);
 
 }

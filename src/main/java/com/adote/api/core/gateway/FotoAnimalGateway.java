@@ -6,6 +6,7 @@ import com.adote.api.infra.persistence.entities.FotoAnimalEntity;
 import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface FotoAnimalGateway {
@@ -15,5 +16,7 @@ public interface FotoAnimalGateway {
     List<FotoAnimal> createMultipleFotos(List<FotoAnimal> fotos);
 
     List<FotoAnimal> getFotosByAnimalId(Long id);
+
+    Optional<FotoAnimal> getFotoAnimalByUrl(String url);
 
 }
