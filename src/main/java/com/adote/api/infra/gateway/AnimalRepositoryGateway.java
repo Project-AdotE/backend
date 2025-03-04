@@ -13,6 +13,7 @@ import com.adote.api.infra.mappers.AnimalMapper;
 import com.adote.api.infra.mappers.FotoAnimalMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.AnimalEntity;
+import com.adote.api.infra.persistence.entities.FotoAnimalEntity;
 import com.adote.api.infra.persistence.repositories.AnimalRepository;
 import com.adote.api.infra.persistence.repositories.FotoAnimalRepository;
 import jakarta.transaction.Transactional;
@@ -163,20 +164,24 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     @Transactional
     @Override
     public void deleteAnimalById(Long id) {
-        this.getAnimalById(id).ifPresent(animal -> {
+        Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
+
+        if (animalOptional.isPresent()) {
+            AnimalEntity animalEntity = animalOptional.get();
+
             // Buscar todas as fotos associadas ao animal
-            List<FotoAnimal> fotosDoAnimal = fotoAnimalRepository.findByAnimal_Id(animal.id());
+            List<FotoAnimalEntity> fotosDoAnimal = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
 
             // Excluir fotos do S3
-            for (FotoAnimal foto : fotosDoAnimal) {
+            for (FotoAnimalEntity foto : fotosDoAnimal) {
                 // Deletar arquivo do S3
-                s3StorageService.deleteFile(foto.url());
+                s3StorageService.deleteFile(foto.getUrl());
 
-                // Deletar registro da foto do banco de dados
-                fotoAnimalRepository.delete(fotoAnimalMapper.toEntity(foto));
+                fotoAnimalRepository.delete(foto);
             }
 
-            animalRepository.deleteById(animal.id());
-        });
+            // Deletar o animal
+            animalRepository.delete(animalEntity);
+        }
     }
 }
