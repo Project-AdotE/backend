@@ -103,7 +103,7 @@ public class AnimalController {
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
     }
 
-    @PatchMapping(value = "update/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping(value = "/update/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> updateAnimal(
             @PathVariable Long id,
             @RequestPart(value = "dados", required = false) AnimalRequestDTO requestDTO,
