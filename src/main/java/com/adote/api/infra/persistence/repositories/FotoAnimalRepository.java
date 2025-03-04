@@ -11,4 +11,6 @@ public interface FotoAnimalRepository extends JpaRepository<FotoAnimalEntity, In
     List<FotoAnimalEntity> getFotoAnimalEntitiesByAnimal_Id(Long animalId);
 
     Optional<FotoAnimalEntity> findByUrl(String url);
+
+    List<FotoAnimal> findByAnimal_Id(Long animalId);
 }

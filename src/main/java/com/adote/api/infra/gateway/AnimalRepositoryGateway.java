@@ -164,6 +164,18 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     @Override
     public void deleteAnimalById(Long id) {
         this.getAnimalById(id).ifPresent(animal -> {
+            // Buscar todas as fotos associadas ao animal
+            List<FotoAnimal> fotosDoAnimal = fotoAnimalRepository.findByAnimal_Id(animal.id());
+
+            // Excluir fotos do S3
+            for (FotoAnimal foto : fotosDoAnimal) {
+                // Deletar arquivo do S3
+                s3StorageService.deleteFile(foto.url());
+
+                // Deletar registro da foto do banco de dados
+                fotoAnimalRepository.delete(fotoAnimalMapper.toEntity(foto));
+            }
+
             animalRepository.deleteById(animal.id());
         });
     }
