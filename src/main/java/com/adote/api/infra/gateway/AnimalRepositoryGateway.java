@@ -78,9 +78,21 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
         // Atualizar dados do animal se necessário
         if (animalRequestDTO != null) {
+            // Campos de texto
             if (animalRequestDTO.nome() != null) animalEntity.setNome(animalRequestDTO.nome());
             if (animalRequestDTO.descricao() != null) animalEntity.setDescricao(animalRequestDTO.descricao());
-            // Atualizar outros campos conforme necessário
+
+            // Campos Enum
+            if (animalRequestDTO.tipo() != null) animalEntity.setTipo(animalRequestDTO.tipo());
+            if (animalRequestDTO.sexo() != null) animalEntity.setSexo(animalRequestDTO.sexo());
+            if (animalRequestDTO.porte() != null) animalEntity.setPorte(animalRequestDTO.porte());
+            if (animalRequestDTO.idade() != null) animalEntity.setIdade(animalRequestDTO.idade());
+
+            // Campos booleanos
+            if (animalRequestDTO.vacinado() != null) animalEntity.setVacinado(animalRequestDTO.vacinado());
+            if (animalRequestDTO.castrado() != null) animalEntity.setCastrado(animalRequestDTO.castrado());
+            if (animalRequestDTO.vermifugado() != null) animalEntity.setVermifugado(animalRequestDTO.vermifugado());
+            if (animalRequestDTO.srd() != null) animalEntity.setSrd(animalRequestDTO.srd());
 
             // Se houver alteração na organização
             if (animalRequestDTO.organizacao_id() != null) {
