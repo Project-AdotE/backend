@@ -46,38 +46,38 @@ public class AnimalController {
     private final DeleteAnimalByIdCase deleteAnimalByIdCase;
     private final AnimalMapper animalMapper;
 
-//    @Operation(summary = "Busca de animais", description = "Busca por todos os animais ou por organização",
-//            security = @SecurityRequirement(name = "bearerAuth"))
-//    @ApiResponse(responseCode = "200", description = "Retorna lista de animais")
-//    @GetMapping("/find/all")
-//    public ResponseEntity<Map<String, Object>> findAll(
-//            @RequestParam(required = false) Long orgId,
-//            @RequestParam(defaultValue = "0") int page) {
-//
-//        Pageable pageable = PageRequest.of(page, 5);
-//
-//        Page<Animal> animalPage;
-//        if (orgId == null) {
-//            animalPage = getAllAnimaisCase.execute(pageable);
-//        } else {
-//            if(getOrganizacaoById.execute(orgId).isEmpty()){
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//            }
-//            animalPage = getAnimaisByOrganizationId.execute(orgId, pageable);
-//        }
-//
-//        List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
-//                .map(animalMapper::toResponseDTO)
-//                .collect(Collectors.toList());
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("animals", animalResponseDTOList);
-//        response.put("currentPage", animalPage.getNumber());
-//        response.put("totalItems", animalPage.getTotalElements());
-//        response.put("totalPages", animalPage.getTotalPages());
-//
-//        return ResponseEntity.ok().body(response);
-//    }
+    @Operation(summary = "Busca de animais", description = "Busca por todos os animais ou por organização",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "Retorna lista de animais")
+    @GetMapping("/find/all")
+    public ResponseEntity<Map<String, Object>> findAll(
+            @RequestParam(required = false) Long orgId,
+            @RequestParam(defaultValue = "0") int page) {
+
+        Pageable pageable = PageRequest.of(page, 5);
+
+        Page<Animal> animalPage;
+        if (orgId == null) {
+            animalPage = getAllAnimaisCase.execute(pageable);
+        } else {
+            if(getOrganizacaoById.execute(orgId).isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            animalPage = getAnimaisByOrganizationId.execute(orgId, pageable);
+        }
+
+        List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
+                .map(animalMapper::toResponseDTO)
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("animals", animalResponseDTOList);
+        response.put("currentPage", animalPage.getNumber());
+        response.put("totalItems", animalPage.getTotalElements());
+        response.put("totalPages", animalPage.getTotalPages());
+
+        return ResponseEntity.ok().body(response);
+    }
 
     @GetMapping("/find")
     public ResponseEntity<AnimalResponseDTO> findAnimalById(@RequestParam Long id) {
