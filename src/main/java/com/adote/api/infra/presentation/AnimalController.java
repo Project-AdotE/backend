@@ -54,7 +54,7 @@ public class AnimalController {
             @RequestParam(required = false) Long orgId,
             @RequestParam(defaultValue = "0") int page) {
 
-        Pageable pageable = PageRequest.of(page, 5);
+        Pageable pageable = PageRequest.of(page, 20);
 
         Page<Animal> animalPage;
         if (orgId == null) {
