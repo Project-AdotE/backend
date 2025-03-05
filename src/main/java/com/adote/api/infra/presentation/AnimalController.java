@@ -1,5 +1,9 @@
 package com.adote.api.infra.presentation;
 
+import com.adote.api.core.Enums.IdadeEnum;
+import com.adote.api.core.Enums.PorteEnum;
+import com.adote.api.core.Enums.SexoEnum;
+import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCase;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
@@ -51,20 +55,15 @@ public class AnimalController {
     @ApiResponse(responseCode = "200", description = "Retorna lista de animais")
     @GetMapping("/find/all")
     public ResponseEntity<Map<String, Object>> findAll(
-            @RequestParam(required = false) Long orgId,
+            @RequestParam(required = false) TipoAnimalEnum tipo,
+            @RequestParam(required = false) IdadeEnum idade,
+            @RequestParam(required = false) PorteEnum porte,
+            @RequestParam(required = false) SexoEnum sexo,
             @RequestParam(defaultValue = "0") int page) {
 
         Pageable pageable = PageRequest.of(page, 20);
 
-        Page<Animal> animalPage;
-        if (orgId == null) {
-            animalPage = getAllAnimaisCase.execute(pageable);
-        } else {
-            if(getOrganizacaoById.execute(orgId).isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            animalPage = getAnimaisByOrganizationId.execute(orgId, pageable);
-        }
+        Page<Animal> animalPage = getAllAnimaisCase.execute(tipo, idade, porte, sexo, pageable);
 
         List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
                 .map(animalMapper::toResponseDTO)

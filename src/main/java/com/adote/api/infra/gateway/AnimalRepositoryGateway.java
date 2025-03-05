@@ -1,5 +1,9 @@
 package com.adote.api.infra.gateway;
 
+import com.adote.api.core.Enums.IdadeEnum;
+import com.adote.api.core.Enums.PorteEnum;
+import com.adote.api.core.Enums.SexoEnum;
+import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.FotoAnimal;
 import com.adote.api.core.entities.Organizacao;
@@ -145,8 +149,16 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     }
 
     @Override
-    public Page<Animal> getAllAnimaisCase(Pageable pageable) {
-        Page<AnimalEntity> animalPage = animalRepository.findAllByOrderByCreatedAtDesc(pageable);
+    public Page<Animal> getAllAnimaisCase(
+            TipoAnimalEnum tipo,
+            IdadeEnum idade,
+            PorteEnum porte,
+            SexoEnum sexo,
+            Pageable pageable
+    ) {
+        Page<AnimalEntity> animalPage = animalRepository.findAllWithFilters(
+                tipo, idade, porte, sexo, pageable
+        );
         return animalPage.map(animalMapper::toAnimal);
     }
 

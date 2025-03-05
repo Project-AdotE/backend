@@ -1,5 +1,9 @@
 package com.adote.api.core.usecases.animal.get;
 
+import com.adote.api.core.Enums.IdadeEnum;
+import com.adote.api.core.Enums.PorteEnum;
+import com.adote.api.core.Enums.SexoEnum;
+import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.gateway.AnimalGateway;
 import org.springframework.data.domain.Page;
@@ -16,7 +20,7 @@ public class GetAllAnimaisCaseImpl implements GetAllAnimaisCase {
     }
 
     @Override
-    public Page<Animal> execute(Pageable pageable) {
-        return animalGateway.getAllAnimaisCase(pageable);
+    public Page<Animal> execute(TipoAnimalEnum tipo, IdadeEnum idade, PorteEnum porte, SexoEnum sexo, Pageable pageable) {
+        return animalGateway.getAllAnimaisCase(tipo, idade, porte, sexo, pageable);
     }
 }

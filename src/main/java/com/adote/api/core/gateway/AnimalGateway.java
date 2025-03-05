@@ -1,5 +1,9 @@
 package com.adote.api.core.gateway;
 
+import com.adote.api.core.Enums.IdadeEnum;
+import com.adote.api.core.Enums.PorteEnum;
+import com.adote.api.core.Enums.SexoEnum;
+import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import org.springframework.data.domain.Page;
@@ -15,7 +19,13 @@ public interface AnimalGateway {
 
     Page<Animal> getAnimaisByOrganizationId(Long id, Pageable pageable);
 
-    Page<Animal> getAllAnimaisCase(Pageable pageable);
+    Page<Animal> getAllAnimaisCase(
+            TipoAnimalEnum tipo,
+            IdadeEnum idade,
+            PorteEnum porte,
+            SexoEnum sexo,
+            Pageable pageable
+    );
 
     Optional<Animal> getAnimalById(Long id);
 
