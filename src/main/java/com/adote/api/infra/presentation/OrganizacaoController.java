@@ -45,7 +45,7 @@ public class OrganizacaoController {
                 .toList();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("animals", organizacaoResponseDTOList);
+        response.put("organizacoes", organizacaoResponseDTOList);
         response.put("currentPage", organizacaoPage.getNumber());
         response.put("totalItems", organizacaoPage.getTotalElements());
         response.put("totalPages", organizacaoPage.getTotalPages());
