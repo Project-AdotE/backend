@@ -4,7 +4,7 @@ public record Organizacao(Long id,
                           String nome,
                           String numero,
                           String cnpj,
-                          String cep,
+                          EnderecoOrganizacao endereco,
                           String email,
                           String senha) {
 }
