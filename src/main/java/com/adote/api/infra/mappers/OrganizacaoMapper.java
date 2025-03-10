@@ -6,13 +6,18 @@ import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {EnderecoMapper.class})
 public interface OrganizacaoMapper {
 
+    @Mapping(target = "endereco.organizacao", ignore = true)
     OrganizacaoEntity toEntity(Organizacao organizacao);
+
+    @Mapping(target = "endereco", source = "endereco")
     Organizacao toOrganizacao(OrganizacaoEntity organizacaoEntity);
+
     Organizacao toOrganizacao(OrganizacaoRequestDTO requestDTO);
     OrganizacaoResponseDTO toResponseDTO(Organizacao organizacao);
 

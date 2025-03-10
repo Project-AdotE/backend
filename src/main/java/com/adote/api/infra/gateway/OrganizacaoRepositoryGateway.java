@@ -30,6 +30,12 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
     }
 
     @Override
+    public Page<Organizacao> getAllOrganizacoesWithFilters(String cidade, String estado, Pageable pageable) {
+        Page<OrganizacaoEntity> organizacaoEntities = organizacaoRepository.findAllWithFilters(cidade, estado, pageable);
+        return organizacaoEntities.map(organizacaoMapper::toOrganizacao);
+    }
+
+    @Override
     public Organizacao createOrganizacao(Organizacao organizacao) {
         OrganizacaoEntity organizacaoEntity = organizacaoMapper.toEntity(organizacao);
         organizacaoEntity.setSenha(passwordEncoder.encode(organizacaoEntity.getSenha()));

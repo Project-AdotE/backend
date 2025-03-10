@@ -17,4 +17,10 @@ public class GetAllOrganizacoesCaseImpl implements GetAllOrganizacoesCase {
     public Page<Organizacao> execute(Pageable pageable) {
         return organizacaoGateway.getAllorganizacoes(pageable);
     }
+
+    @Override
+    public Page<Organizacao> execute(String cidade, String estado, Pageable pageable) {
+        return organizacaoGateway.getAllOrganizacoesWithFilters(cidade, estado, pageable);
+    }
+
 }

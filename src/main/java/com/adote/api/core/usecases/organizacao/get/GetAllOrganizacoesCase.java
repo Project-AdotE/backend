@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface GetAllOrganizacoesCase {
 
     Page<Organizacao> execute(Pageable pageable);
-
+    Page<Organizacao> execute(String cidade, String estado, Pageable pageable);
 }

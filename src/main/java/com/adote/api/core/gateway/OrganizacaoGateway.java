@@ -12,4 +12,5 @@ public interface OrganizacaoGateway {
     Optional<Organizacao> getOrganizacaoById(Long id);
     void deleteOrganizacaoById(Long id);
     Page<Organizacao> getAllorganizacoes(Pageable pageable);
+    Page<Organizacao> getAllOrganizacoesWithFilters(String cidade, String estado, Pageable pageable);
 }

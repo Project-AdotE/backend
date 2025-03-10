@@ -34,11 +34,18 @@ public class OrganizacaoController {
 
     @GetMapping("/find/all")
     public ResponseEntity<Map<String, Object>> findAllOrganizacoes(
-            @RequestParam(defaultValue = "0") int page
-    ) {
+            @RequestParam(required = false) String cidade,
+            @RequestParam(required = false) String estado,
+            @RequestParam(defaultValue = "0") int page) {
+
         Pageable pageable = PageRequest.of(page, 20);
 
-        Page<Organizacao> organizacaoPage = getAllOrganizacoesCase.execute(pageable);
+        Page<Organizacao> organizacaoPage;
+        if (cidade != null || estado != null) {
+            organizacaoPage = getAllOrganizacoesCase.execute(cidade, estado, pageable);
+        } else {
+            organizacaoPage = getAllOrganizacoesCase.execute(pageable);
+        }
 
         List<OrganizacaoResponseDTO> organizacaoResponseDTOList = organizacaoPage.stream()
                 .map(organizacaoMapper::toResponseDTO)
@@ -51,7 +58,6 @@ public class OrganizacaoController {
         response.put("totalPages", organizacaoPage.getTotalPages());
 
         return ResponseEntity.ok().body(response);
-
     }
 
     @GetMapping("/find")
