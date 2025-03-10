@@ -16,7 +16,6 @@ import java.util.Optional;
 public interface AnimalRepository extends JpaRepository<AnimalEntity, Integer> {
 
     Page<AnimalEntity> findAllByOrganizacao_IdOrderByCreatedAtDesc(Long organizacaoId, Pageable pageable);
-    Page<AnimalEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     Optional<AnimalEntity> findById(Long id);
 

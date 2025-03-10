@@ -12,19 +12,13 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {EnderecoOrganizacaoMapper.class})
 public interface OrganizacaoMapper {
 
-    // Mapeamentos principais existentes
     OrganizacaoEntity toEntity(Organizacao organizacao);
     Organizacao toOrganizacao(OrganizacaoEntity organizacaoEntity);
     Organizacao toOrganizacao(OrganizacaoRequestDTO requestDTO);
     OrganizacaoResponseDTO toResponseDTO(Organizacao organizacao);
-
-    EnderecoOrganizacaoEntity toEntity(EnderecoOrganizacao endereco);
-    EnderecoOrganizacao toEnderecoOrganizacao(EnderecoOrganizacaoEntity enderecoEntity);
-    EnderecoOrganizacao toEnderecoOrganizacao(EnderecoOrganizacaoRequestDTO requestDTO);
-    EnderecoOrganizacaoResponseDTO toResponseDTO(EnderecoOrganizacao endereco);
 
     @AfterMapping
     default void setOrganizacaoInEndereco(@MappingTarget OrganizacaoEntity organizacaoEntity) {

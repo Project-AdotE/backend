@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/animal/find/all").permitAll()
                         .requestMatchers(HttpMethod.GET, "/animal/find").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/organizacao/find/all").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
