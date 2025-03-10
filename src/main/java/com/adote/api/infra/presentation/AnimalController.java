@@ -53,7 +53,7 @@ public class AnimalController {
     @Operation(summary = "Busca de animais", description = "Busca por todos os animais ou por organização",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(responseCode = "200", description = "Retorna lista de animais")
-    @GetMapping("/find/all")
+    @GetMapping
     public ResponseEntity<Map<String, Object>> findAll(
             @RequestParam(required = false) TipoAnimalEnum tipo,
             @RequestParam(required = false) IdadeEnum idade,
@@ -78,8 +78,8 @@ public class AnimalController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/find")
-    public ResponseEntity<AnimalResponseDTO> findAnimalById(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<AnimalResponseDTO> findAnimalById(@PathVariable Long id) {
         Optional<Animal> animal = getAnimalByIdCase.execute(id);
         if(animal.isPresent()) {
             return ResponseEntity.ok(animalMapper.toResponseDTO(animal.get()));
@@ -87,12 +87,11 @@ public class AnimalController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> createAnimal(
             @RequestPart("dados") AnimalRequestDTO requestDTO,
             @RequestPart(value = "fotos", required = false) List<MultipartFile> fotos) {
 
-        System.out.println("descrição recebida: " + requestDTO.descricao());
         Animal newAnimal = createAnimalCase.execute(requestDTO, fotos);
 
         if (newAnimal == null) {
@@ -102,7 +101,7 @@ public class AnimalController {
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
     }
 
-    @PatchMapping(value = "/update/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> updateAnimal(
             @PathVariable Long id,
             @RequestPart(value = "dados", required = false) AnimalRequestDTO requestDTO,
@@ -118,9 +117,9 @@ public class AnimalController {
         return ResponseEntity.ok(animalMapper.toResponseDTO(updatedAnimal));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteAnimalById(@RequestParam Long animalId) {
-        deleteAnimalByIdCase.execute(animalId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAnimalById(@PathVariable Long id) {
+        deleteAnimalByIdCase.execute(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
