@@ -23,8 +23,8 @@ public class OrganizacaoController {
     private final OrganizacaoMapper organizacaoMapper;
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrganizacaoResponseDTO> findOrganizacaoById(@PathVariable Long id) {
+    @GetMapping("/find")
+    public ResponseEntity<OrganizacaoResponseDTO> findOrganizacaoById(@RequestParam Long id) {
         Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(id);
         if (organizacaoOptional.isPresent()) {
             return ResponseEntity.ok(organizacaoMapper.toResponseDTO(organizacaoOptional.get()));
@@ -32,8 +32,8 @@ public class OrganizacaoController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrganizacaoById(@PathVariable Long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteOrganizacaoById(@RequestParam Long id) {
         Optional<Organizacao> organizacaoEntity = getOrganizacaoById.execute(id);
         if (organizacaoEntity.isPresent()) {
             deleteOrganizacaoById.execute(id);
