@@ -32,8 +32,9 @@ public class OrganizacaoEntity implements UserDetails {
     @Column(name = "cnpj", nullable = false)
     private String cnpj;
 
-    @Column(name = "cep", nullable = false)
-    private String cep;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private EnderecoOrganizacaoEntity endereco;
 
     @Column(name = "email", nullable = false)
     private String email;
