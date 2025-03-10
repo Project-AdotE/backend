@@ -2,6 +2,8 @@ package com.adote.api.infra.config;
 
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoByIdImpl;
+import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCase;
+import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCaseImpl;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoByIdImpl;
 import com.adote.api.core.usecases.organizacao.post.CreateOrganizacaoCase;
@@ -32,5 +34,9 @@ public class OrganizacaoUseCasesConfig {
         return new GetOrganizacaoByIdImpl(organizacaoRepositoryGateway);
     }
 
+    @Bean
+    public GetAllOrganizacoesCase getAllOrganizacoesCase(){
+        return new GetAllOrganizacoesCaseImpl(organizacaoRepositoryGateway);
+    }
 
 }

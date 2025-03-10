@@ -6,9 +6,12 @@ import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import com.adote.api.infra.persistence.repositories.OrganizacaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -19,6 +22,18 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
 
     private final OrganizacaoMapper organizacaoMapper;
     private final OrganizacaoRepository organizacaoRepository;
+
+    @Override
+    public Page<Organizacao> getAllorganizacoes(Pageable pageable) {
+        Page<OrganizacaoEntity> organizacaoEntities = organizacaoRepository.findAll(pageable);
+        return organizacaoEntities.map(organizacaoMapper::toOrganizacao);
+    }
+
+    @Override
+    public Page<Organizacao> getAllOrganizacoesWithFilters(String cidade, String estado, Pageable pageable) {
+        Page<OrganizacaoEntity> organizacaoEntities = organizacaoRepository.findAllWithFilters(cidade, estado, pageable);
+        return organizacaoEntities.map(organizacaoMapper::toOrganizacao);
+    }
 
     @Override
     public Organizacao createOrganizacao(Organizacao organizacao) {
