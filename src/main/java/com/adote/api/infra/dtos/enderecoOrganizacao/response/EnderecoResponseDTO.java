@@ -1,6 +1,6 @@
 package com.adote.api.infra.dtos.enderecoOrganizacao.response;
 
-public record EnderecoOrganizacaoResponseDTO(
+public record EnderecoResponseDTO(
         Long id,
         String cep,
         String rua,
