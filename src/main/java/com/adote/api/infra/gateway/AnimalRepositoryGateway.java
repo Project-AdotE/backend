@@ -154,12 +154,11 @@ public class AnimalRepositoryGateway implements AnimalGateway {
             IdadeEnum idade,
             PorteEnum porte,
             SexoEnum sexo,
-            Pageable pageable
-    ) {
-        Page<AnimalEntity> animalPage = animalRepository.findAllWithFilters(
-                tipo, idade, porte, sexo, pageable
-        );
-        return animalPage.map(animalMapper::toAnimal);
+            Long orgId,
+            Pageable pageable) {
+
+        Page<AnimalEntity> animalEntities = animalRepository.findAllWithFilters(tipo, idade, porte, sexo, orgId, pageable);
+        return animalEntities.map(animalMapper::toAnimal);
     }
 
     @Override

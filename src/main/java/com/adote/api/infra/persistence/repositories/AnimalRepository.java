@@ -26,12 +26,14 @@ public interface AnimalRepository extends JpaRepository<AnimalEntity, Integer> {
             "AND (:idade IS NULL OR a.idade = :idade) " +
             "AND (:porte IS NULL OR a.porte = :porte) " +
             "AND (:sexo IS NULL OR a.sexo = :sexo) " +
+            "AND (:orgId IS NULL OR a.organizacao.id = :orgId) " +
             "ORDER BY a.createdAt DESC")
     Page<AnimalEntity> findAllWithFilters(
             @Param("tipo") TipoAnimalEnum tipo,
             @Param("idade") IdadeEnum idade,
             @Param("porte") PorteEnum porte,
             @Param("sexo") SexoEnum sexo,
+            @Param("orgId") Long orgId,
             Pageable pageable
     );
 

@@ -59,11 +59,12 @@ public class AnimalController {
             @RequestParam(required = false) IdadeEnum idade,
             @RequestParam(required = false) PorteEnum porte,
             @RequestParam(required = false) SexoEnum sexo,
+            @RequestParam(required = false) Long orgId,
             @RequestParam(defaultValue = "0") int page) {
 
         Pageable pageable = PageRequest.of(page, 20);
 
-        Page<Animal> animalPage = getAllAnimaisCase.execute(tipo, idade, porte, sexo, pageable);
+        Page<Animal> animalPage = getAllAnimaisCase.execute(tipo, idade, porte, sexo, orgId, pageable);
 
         List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
                 .map(animalMapper::toResponseDTO)
