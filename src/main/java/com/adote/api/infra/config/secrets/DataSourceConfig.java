@@ -17,7 +17,7 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
-        JsonNode secret = awsSecretManagerService.getSecret("adote-db-secret");
+        JsonNode secret = awsSecretManagerService.getSecret("adote-db-dev");
 
         String host = getJsonValue(secret, "host");
         String port = getJsonValue(secret, "port");
