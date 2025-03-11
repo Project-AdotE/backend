@@ -1,11 +1,18 @@
 package com.adote.api.infra.presentation;
 
+import com.adote.api.core.Enums.IdadeEnum;
+import com.adote.api.core.Enums.PorteEnum;
+import com.adote.api.core.Enums.SexoEnum;
+import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
+import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
+import com.adote.api.infra.mappers.AnimalMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/organizacao")
@@ -30,6 +38,9 @@ public class OrganizacaoController {
     private final GetOrganizacaoById getOrganizacaoById;
     private final GetAllOrganizacoesCase getAllOrganizacoesCase;
     private final DeleteOrganizacaoById deleteOrganizacaoById;
+    private final GetAllAnimaisCase getAllAnimaisCase;
+
+    private final AnimalMapper animalMapper;
     private final OrganizacaoMapper organizacaoMapper;
 
     @GetMapping("/find/all")
@@ -61,11 +72,51 @@ public class OrganizacaoController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<OrganizacaoResponseDTO> findOrganizacaoById(@RequestParam Long id) {
+    public ResponseEntity<OrganizacaoResponseDTO> findOrganizacaoById(
+            @RequestParam Long id,
+            @RequestParam(defaultValue = "true") boolean includeAnimals,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) TipoAnimalEnum tipo,
+            @RequestParam(required = false) IdadeEnum idade,
+            @RequestParam(required = false) PorteEnum porte,
+            @RequestParam(required = false) SexoEnum sexo) {
+
         Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(id);
+
         if (organizacaoOptional.isPresent()) {
-            return ResponseEntity.ok(organizacaoMapper.toResponseDTO(organizacaoOptional.get()));
+            Organizacao organizacao = organizacaoOptional.get();
+            OrganizacaoResponseDTO responseDTO = organizacaoMapper.toResponseDTO(organizacao);
+
+            if (includeAnimals) {
+                Pageable pageable = PageRequest.of(page, 20);
+
+                Page<Animal> animalPage = getAllAnimaisCase.execute(
+                        tipo, idade, porte, sexo, id, pageable);
+
+                List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
+                        .map(animalMapper::toResponseDTO)
+                        .collect(Collectors.toList());
+
+                Map<String, Object> animaisData = new HashMap<>();
+                animaisData.put("content", animalResponseDTOList);
+                animaisData.put("currentPage", animalPage.getNumber());
+                animaisData.put("totalItems", animalPage.getTotalElements());
+                animaisData.put("totalPages", animalPage.getTotalPages());
+
+                responseDTO = new OrganizacaoResponseDTO(
+                        responseDTO.id(),
+                        responseDTO.nome(),
+                        responseDTO.numero(),
+                        responseDTO.cnpj(),
+                        responseDTO.endereco(),
+                        responseDTO.email(),
+                        animaisData
+                );
+            }
+
+            return ResponseEntity.ok(responseDTO);
         }
+
         return ResponseEntity.notFound().build();
     }
 

@@ -81,25 +81,20 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
         AnimalEntity animalEntity = animalOptional.get();
 
-        // Atualizar dados do animal se necessário
         if (animalRequestDTO != null) {
-            // Campos de texto
             if (animalRequestDTO.nome() != null) animalEntity.setNome(animalRequestDTO.nome());
             if (animalRequestDTO.descricao() != null) animalEntity.setDescricao(animalRequestDTO.descricao());
 
-            // Campos Enum
             if (animalRequestDTO.tipo() != null) animalEntity.setTipo(animalRequestDTO.tipo());
             if (animalRequestDTO.sexo() != null) animalEntity.setSexo(animalRequestDTO.sexo());
             if (animalRequestDTO.porte() != null) animalEntity.setPorte(animalRequestDTO.porte());
             if (animalRequestDTO.idade() != null) animalEntity.setIdade(animalRequestDTO.idade());
 
-            // Campos booleanos
             if (animalRequestDTO.vacinado() != null) animalEntity.setVacinado(animalRequestDTO.vacinado());
             if (animalRequestDTO.castrado() != null) animalEntity.setCastrado(animalRequestDTO.castrado());
             if (animalRequestDTO.vermifugado() != null) animalEntity.setVermifugado(animalRequestDTO.vermifugado());
             if (animalRequestDTO.srd() != null) animalEntity.setSrd(animalRequestDTO.srd());
 
-            // Se houver alteração na organização
             if (animalRequestDTO.organizacao_id() != null) {
                 Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(animalRequestDTO.organizacao_id());
                 if (organizacaoOptional.isPresent()) {
@@ -110,17 +105,14 @@ public class AnimalRepositoryGateway implements AnimalGateway {
             animalRepository.save(animalEntity);
         }
 
-        // Remover fotos selecionadas
         if (fotosParaRemover != null && !fotosParaRemover.isEmpty()) {
             for (String fotoUrl : fotosParaRemover) {
                 Optional<FotoAnimal> fotoAnimalOptional = getFotoByUrlCase.getFotoAnimalByUrl(fotoUrl);
                 if (fotoAnimalOptional.isPresent()) {
                     FotoAnimal fotoAnimal = fotoAnimalOptional.get();
 
-                    // Remover arquivo do S3
                     s3StorageService.deleteFile(fotoUrl);
 
-                    // Remover registro do banco
                     fotoAnimalRepository.delete(fotoAnimalMapper.toEntity(fotoAnimal));
                 }
             }
@@ -136,16 +128,6 @@ public class AnimalRepositoryGateway implements AnimalGateway {
         }
 
         return animalMapper.toAnimal(animalEntity);
-    }
-
-    @Override
-    public Page<Animal> getAnimaisByOrganizationId(Long id, Pageable pageable) {
-        Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(id);
-        if (organizacaoOptional.isPresent()) {
-            Page<AnimalEntity> animalPage = animalRepository.findAllByOrganizacao_IdOrderByCreatedAtDesc(id, pageable);
-            return animalPage.map(animalMapper::toAnimal);
-        }
-        return Page.empty();
     }
 
     @Override
@@ -180,18 +162,14 @@ public class AnimalRepositoryGateway implements AnimalGateway {
         if (animalOptional.isPresent()) {
             AnimalEntity animalEntity = animalOptional.get();
 
-            // Buscar todas as fotos associadas ao animal
             List<FotoAnimalEntity> fotosDoAnimal = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
 
-            // Excluir fotos do S3
             for (FotoAnimalEntity foto : fotosDoAnimal) {
-                // Deletar arquivo do S3
                 s3StorageService.deleteFile(foto.getUrl());
 
                 fotoAnimalRepository.delete(foto);
             }
 
-            // Deletar o animal
             animalRepository.delete(animalEntity);
         }
     }

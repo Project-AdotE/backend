@@ -17,8 +17,6 @@ public interface AnimalGateway {
 
     Animal createAnimal(AnimalRequestDTO animalRequestDTO, List<MultipartFile> fotos);
 
-    Page<Animal> getAnimaisByOrganizationId(Long id, Pageable pageable);
-
     Page<Animal> getAllAnimaisCase(
             TipoAnimalEnum tipo,
             IdadeEnum idade,

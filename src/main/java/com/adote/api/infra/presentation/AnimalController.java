@@ -7,11 +7,9 @@ import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCase;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
-import com.adote.api.core.usecases.animal.get.GetAnimaisByOrganizationId;
 import com.adote.api.core.usecases.animal.get.GetAnimalByIdCase;
 import com.adote.api.core.usecases.animal.patch.UpdateAnimalCase;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
-import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
 import com.adote.api.infra.mappers.AnimalMapper;
@@ -42,10 +40,8 @@ import java.util.stream.Collectors;
 public class AnimalController {
 
     private final CreateAnimalCase createAnimalCase;
-    private final GetAnimaisByOrganizationId getAnimaisByOrganizationId;
     private final UpdateAnimalCase updateAnimalCase;
     private final GetAllAnimaisCase getAllAnimaisCase;
-    private final GetOrganizacaoById getOrganizacaoById;
     private final GetAnimalByIdCase getAnimalByIdCase;
     private final DeleteAnimalByIdCase deleteAnimalByIdCase;
     private final AnimalMapper animalMapper;

@@ -25,11 +25,6 @@ public class AnimalUseCasesConfig{
     }
 
     @Bean
-    public GetAnimaisByOrganizationId getAnimaisByOrganizationId(){
-        return new GetAnimaisByOrganizationIdImpl(animalRepositoryGateway);
-    }
-
-    @Bean
     public GetAllAnimaisCase getAllAnimaisCase(){
         return new GetAllAnimaisCaseImpl(animalRepositoryGateway);
     }
