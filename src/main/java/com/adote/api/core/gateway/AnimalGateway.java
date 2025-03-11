@@ -24,6 +24,7 @@ public interface AnimalGateway {
             IdadeEnum idade,
             PorteEnum porte,
             SexoEnum sexo,
+            Long orgId,
             Pageable pageable
     );
 

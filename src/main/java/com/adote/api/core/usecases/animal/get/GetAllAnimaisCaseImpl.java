@@ -20,7 +20,7 @@ public class GetAllAnimaisCaseImpl implements GetAllAnimaisCase {
     }
 
     @Override
-    public Page<Animal> execute(TipoAnimalEnum tipo, IdadeEnum idade, PorteEnum porte, SexoEnum sexo, Pageable pageable) {
-        return animalGateway.getAllAnimaisCase(tipo, idade, porte, sexo, pageable);
+    public Page<Animal> execute(TipoAnimalEnum tipo, IdadeEnum idade, PorteEnum porte, SexoEnum sexo, Long orgId, Pageable pageable) {
+        return animalGateway.getAllAnimaisCase(tipo, idade, porte, sexo, orgId, pageable);
     }
 }

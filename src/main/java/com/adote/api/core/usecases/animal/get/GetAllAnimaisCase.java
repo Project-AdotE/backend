@@ -17,6 +17,7 @@ public interface GetAllAnimaisCase {
             IdadeEnum idade,
             PorteEnum porte,
             SexoEnum sexo,
+            Long orgId,
             Pageable pageable
     );
 }
