@@ -45,6 +45,9 @@ public class OrganizacaoEntity implements UserDetails {
     @OneToMany(mappedBy = "organizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AnimalEntity> animais;
 
+    @OneToMany(mappedBy = "organizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ChavePixEntity> chavesPix;
+
 
     @Override
     public boolean isEnabled() {
