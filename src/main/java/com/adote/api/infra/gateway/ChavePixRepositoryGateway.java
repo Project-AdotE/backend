@@ -5,6 +5,7 @@ import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.gateway.ChavePixGateway;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.chavePix.request.ChavePixRequestDTO;
+import com.adote.api.infra.dtos.chavePix.update.ChavePixUpdateDTO;
 import com.adote.api.infra.mappers.ChavePixMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.ChavePixEntity;
@@ -59,5 +60,22 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
                     .toList();
         }
         return List.of();
+    }
+
+    @Override
+    public ChavePix updateChaveById(Long id, ChavePixUpdateDTO updateDTO) {
+        ChavePixEntity entity = chavePixRepository.findById(id);
+        if (updateDTO.tipo() != null) {
+            entity.setTipo(updateDTO.tipo());
+        }
+        if (updateDTO.chave() != null) {
+            if (chavePixRepository.existsByChaveAndIdNot(updateDTO.chave(), id)) {
+                return null;
+            }
+            entity.setChave(updateDTO.chave());
+        }
+
+        ChavePixEntity savedEntity = chavePixRepository.save(entity);
+        return chavePixMapper.toChavePix(savedEntity);
     }
 }

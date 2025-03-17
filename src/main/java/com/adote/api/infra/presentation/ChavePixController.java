@@ -2,9 +2,12 @@ package com.adote.api.infra.presentation;
 
 import com.adote.api.core.entities.ChavePix;
 import com.adote.api.core.usecases.chavePix.get.GetAllChavesCase;
+import com.adote.api.core.usecases.chavePix.patch.UpdateChaveByIdCase;
 import com.adote.api.core.usecases.chavePix.post.CreateChaveCase;
 import com.adote.api.infra.dtos.chavePix.request.ChavePixRequestDTO;
 import com.adote.api.infra.dtos.chavePix.response.ChavePixResponseDTO;
+import com.adote.api.infra.dtos.chavePix.response.ChavePixSimplificadaDTO;
+import com.adote.api.infra.dtos.chavePix.update.ChavePixUpdateDTO;
 import com.adote.api.infra.mappers.ChavePixMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ public class ChavePixController {
 
     private final CreateChaveCase createChaveCase;
     private final GetAllChavesCase getAllChavesCase;
+    private final UpdateChaveByIdCase updateChaveByIdCase;
 
     private final ChavePixMapper chavePixMapper;
 
@@ -38,6 +42,24 @@ public class ChavePixController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(chavePixMapper.toResponseDTO(newChave));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ChavePixSimplificadaDTO> updateChavePix(
+            @PathVariable Long id,
+            @RequestBody ChavePixUpdateDTO updateDTO) {
+
+        ChavePix updatedChavePix = updateChaveByIdCase.execute(id, updateDTO);
+        if (updatedChavePix == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        ChavePixSimplificadaDTO responseDTO = new ChavePixSimplificadaDTO(
+                updatedChavePix.id(),
+                updatedChavePix.tipo(),
+                updatedChavePix.chave()
+        );
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface ChavePixRepository extends JpaRepository<ChavePixEntity, Integer> {
     List<ChavePixEntity> findAllByOrganizacao_Id(Long organizacaoId);
+
+    Boolean existsByChaveAndIdNot(String chave, Long id);
+
+    ChavePixEntity findById(Long id);
 }
