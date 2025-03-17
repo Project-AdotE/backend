@@ -2,6 +2,8 @@ package com.adote.api.infra.config;
 
 import com.adote.api.core.usecases.chavePix.get.GetAllChavesCase;
 import com.adote.api.core.usecases.chavePix.get.GetAllChavesCaseImpl;
+import com.adote.api.core.usecases.chavePix.get.GetChavesByOrgIdCase;
+import com.adote.api.core.usecases.chavePix.get.GetChavesByOrgIdCaseImpl;
 import com.adote.api.core.usecases.chavePix.post.CreateChaveCase;
 import com.adote.api.core.usecases.chavePix.post.CreateChaveCaseImpl;
 import com.adote.api.infra.gateway.ChavePixRepositoryGateway;
@@ -23,6 +25,11 @@ public class ChavePixUseCasesConfig {
     @Bean
     public GetAllChavesCase getAllChaveCase() {
         return new GetAllChavesCaseImpl(repositoryGateway);
+    }
+
+    @Bean
+    public GetChavesByOrgIdCase getChavesByOrgIdCase() {
+        return new GetChavesByOrgIdCaseImpl(repositoryGateway);
     }
 
 }

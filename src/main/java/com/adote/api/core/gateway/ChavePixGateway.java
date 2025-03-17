@@ -11,4 +11,6 @@ public interface ChavePixGateway {
 
     List<ChavePix> getAllChaves();
 
+    List<ChavePix> getChavePixByOrgId(Long orgId);
+
 }

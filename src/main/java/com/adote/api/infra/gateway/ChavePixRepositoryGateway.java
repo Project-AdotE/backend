@@ -20,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChavePixRepositoryGateway implements ChavePixGateway {
 
+
     private final GetOrganizacaoById getOrganizacaoById;
 
     private final ChavePixRepository chavePixRepository;
@@ -46,5 +47,17 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
         return chavePixEntities.stream()
                 .map(chavePixMapper::toChavePix)
                 .toList();
+    }
+
+    @Override
+    public List<ChavePix> getChavePixByOrgId(Long orgId) {
+        Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(orgId);
+        if (organizacaoOptional.isPresent()) {
+            List<ChavePixEntity> chavePixEntityList = chavePixRepository.findAllByOrganizacao_Id(orgId);
+            return chavePixEntityList.stream()
+                    .map(chavePixMapper::toChavePix)
+                    .toList();
+        }
+        return List.of();
     }
 }

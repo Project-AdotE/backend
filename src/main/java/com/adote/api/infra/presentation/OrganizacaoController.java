@@ -5,14 +5,18 @@ import com.adote.api.core.Enums.PorteEnum;
 import com.adote.api.core.Enums.SexoEnum;
 import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
+import com.adote.api.core.entities.ChavePix;
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
+import com.adote.api.core.usecases.chavePix.get.GetChavesByOrgIdCase;
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
+import com.adote.api.infra.dtos.chavePix.response.ChavePixSimplificadaDTO;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
 import com.adote.api.infra.mappers.AnimalMapper;
+import com.adote.api.infra.mappers.ChavePixMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +43,7 @@ public class OrganizacaoController {
     private final GetAllOrganizacoesCase getAllOrganizacoesCase;
     private final DeleteOrganizacaoById deleteOrganizacaoById;
     private final GetAllAnimaisCase getAllAnimaisCase;
+    private final GetChavesByOrgIdCase getChavesByOrgIdCase;
 
     private final AnimalMapper animalMapper;
     private final OrganizacaoMapper organizacaoMapper;
@@ -87,6 +92,7 @@ public class OrganizacaoController {
             Organizacao organizacao = organizacaoOptional.get();
             OrganizacaoResponseDTO responseDTO = organizacaoMapper.toResponseDTO(organizacao);
 
+            Map<String, Object> animaisData = null;
             if (includeAnimals) {
                 Pageable pageable = PageRequest.of(page, 20);
 
@@ -97,27 +103,41 @@ public class OrganizacaoController {
                         .map(animalMapper::toResponseDTO)
                         .collect(Collectors.toList());
 
-                Map<String, Object> animaisData = new HashMap<>();
+                animaisData = new HashMap<>();
                 animaisData.put("content", animalResponseDTOList);
                 animaisData.put("currentPage", animalPage.getNumber());
                 animaisData.put("totalItems", animalPage.getTotalElements());
                 animaisData.put("totalPages", animalPage.getTotalPages());
-
-                responseDTO = new OrganizacaoResponseDTO(
-                        responseDTO.id(),
-                        responseDTO.nome(),
-                        responseDTO.numero(),
-                        responseDTO.cnpj(),
-                        responseDTO.endereco(),
-                        responseDTO.email(),
-                        animaisData
-                );
             }
+
+            List<ChavePixSimplificadaDTO> chavesPix = getChavesPix(id);
+
+            responseDTO = new OrganizacaoResponseDTO(
+                    responseDTO.id(),
+                    responseDTO.nome(),
+                    responseDTO.numero(),
+                    responseDTO.cnpj(),
+                    responseDTO.endereco(),
+                    responseDTO.email(),
+                    animaisData,
+                    chavesPix
+            );
 
             return ResponseEntity.ok(responseDTO);
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    private List<ChavePixSimplificadaDTO> getChavesPix(Long organizacaoId) {
+        List<ChavePix> chavesPix = getChavesByOrgIdCase.execute(organizacaoId);
+
+        return chavesPix.stream()
+                .map(chavePix -> new ChavePixSimplificadaDTO(
+                        chavePix.id(),
+                        chavePix.tipo(),
+                        chavePix.chave()))
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/delete")

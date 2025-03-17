@@ -14,8 +14,8 @@ public record OrganizacaoResponseDTO(
         EnderecoResponseDTO endereco,
         String email,
         Map<String, Object> animais,
-        List<ChavePixSimplificadaDTO> chavesPix
-) {
+        List<ChavePixSimplificadaDTO> chavesPix) {
+
     public OrganizacaoResponseDTO(
             Long id,
             String nome,
@@ -26,7 +26,6 @@ public record OrganizacaoResponseDTO(
         this(id, nome, numero, cnpj, endereco, email, null, null);
     }
 
-    // Novo construtor sem chavesPix
     public OrganizacaoResponseDTO(
             Long id,
             String nome,
