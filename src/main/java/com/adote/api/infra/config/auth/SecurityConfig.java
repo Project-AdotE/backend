@@ -44,6 +44,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/organizacao/find/all").permitAll()
                         .requestMatchers(HttpMethod.GET, "/organizacao/find/**").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/qrcodepix").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
