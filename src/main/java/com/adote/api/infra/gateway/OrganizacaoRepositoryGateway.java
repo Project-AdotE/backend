@@ -1,8 +1,14 @@
 package com.adote.api.infra.gateway;
 
+import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.gateway.OrganizacaoGateway;
+import com.adote.api.infra.filters.animal.AnimalFilter;
+import com.adote.api.infra.filters.animal.AnimalSpecification;
+import com.adote.api.infra.filters.organizacao.OrganizacaoFilter;
+import com.adote.api.infra.filters.organizacao.OrganizacaoSpecification;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
+import com.adote.api.infra.persistence.entities.AnimalEntity;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import com.adote.api.infra.persistence.repositories.OrganizacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +30,10 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
     private final OrganizacaoRepository organizacaoRepository;
 
     @Override
-    public Page<Organizacao> getAllorganizacoes(Pageable pageable) {
-        Page<OrganizacaoEntity> organizacaoEntities = organizacaoRepository.findAll(pageable);
-        return organizacaoEntities.map(organizacaoMapper::toOrganizacao);
-    }
-
-    @Override
-    public Page<Organizacao> getAllOrganizacoesWithFilters(String cidade, String estado, Pageable pageable) {
-        Page<OrganizacaoEntity> organizacaoEntities = organizacaoRepository.findAllWithFilters(cidade, estado, pageable);
-        return organizacaoEntities.map(organizacaoMapper::toOrganizacao);
+    public Page<Organizacao> getAllorganizacoes(OrganizacaoFilter filter, Pageable pageable) {
+        OrganizacaoSpecification spec = new OrganizacaoSpecification(filter);
+        Page<OrganizacaoEntity> organizacoes = organizacaoRepository.findAll(spec, pageable);
+        return organizacoes.map(organizacaoMapper::toOrganizacao);
     }
 
     @Override

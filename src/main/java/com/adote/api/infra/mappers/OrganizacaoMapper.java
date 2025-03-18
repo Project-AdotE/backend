@@ -2,6 +2,7 @@ package com.adote.api.infra.mappers;
 
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.infra.dtos.organizacao.request.OrganizacaoRequestDTO;
+import com.adote.api.infra.dtos.organizacao.response.OrganizacaoBaseDTO;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import org.mapstruct.AfterMapping;
@@ -20,6 +21,8 @@ public interface OrganizacaoMapper {
 
     Organizacao toOrganizacao(OrganizacaoRequestDTO requestDTO);
     OrganizacaoResponseDTO toResponseDTO(Organizacao organizacao);
+
+    OrganizacaoBaseDTO toBaseDTO(Organizacao organizacao);
 
     @AfterMapping
     default void setOrganizacaoInEndereco(@MappingTarget OrganizacaoEntity organizacaoEntity) {

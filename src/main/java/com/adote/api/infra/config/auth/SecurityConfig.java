@@ -33,16 +33,19 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/adote/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/adote/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/animal/find/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/animal/find").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/animal/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/organizacao/find/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/organizacao/find/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/organizacao").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/organizacao/{id}").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/chavepix/organizacao/{id}").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/qrcodepix").permitAll()
 
                         .anyRequest().authenticated()
                 )
@@ -53,7 +56,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://adot-e.vercel.app/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://adot-e.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

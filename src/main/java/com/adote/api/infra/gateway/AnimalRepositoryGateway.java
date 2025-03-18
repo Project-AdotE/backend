@@ -1,9 +1,5 @@
 package com.adote.api.infra.gateway;
 
-import com.adote.api.core.Enums.IdadeEnum;
-import com.adote.api.core.Enums.PorteEnum;
-import com.adote.api.core.Enums.SexoEnum;
-import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.FotoAnimal;
 import com.adote.api.core.entities.Organizacao;
@@ -13,6 +9,8 @@ import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.config.s3.S3StorageService;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
+import com.adote.api.infra.filters.animal.AnimalFilter;
+import com.adote.api.infra.filters.animal.AnimalSpecification;
 import com.adote.api.infra.mappers.AnimalMapper;
 import com.adote.api.infra.mappers.FotoAnimalMapper;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
@@ -23,26 +21,29 @@ import com.adote.api.infra.persistence.repositories.FotoAnimalRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class AnimalRepositoryGateway implements AnimalGateway {
 
-    private final AnimalRepository animalRepository;
     private final FotoAnimalRepository fotoAnimalRepository;
-    private final GetFotoByUrlCase getFotoByUrlCase;
+    private final AnimalRepository animalRepository;
+
     private final GetOrganizacaoById getOrganizacaoById;
+
+    private final GetFotoByUrlCase getFotoByUrlCase;
     private final CreateMultipleFotosCase createMultipleFotosCase;
+
+    private final S3StorageService s3StorageService;
+
     private final AnimalMapper animalMapper;
     private final OrganizacaoMapper organizacaoMapper;
-    private final S3StorageService s3StorageService;
     private final FotoAnimalMapper fotoAnimalMapper;
 
 
@@ -131,15 +132,9 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     }
 
     @Override
-    public Page<Animal> getAllAnimaisCase(
-            TipoAnimalEnum tipo,
-            IdadeEnum idade,
-            PorteEnum porte,
-            SexoEnum sexo,
-            Long orgId,
-            Pageable pageable) {
-
-        Page<AnimalEntity> animalEntities = animalRepository.findAllWithFilters(tipo, idade, porte, sexo, orgId, pageable);
+    public Page<Animal> getAllAnimais(AnimalFilter filter, Pageable pageable) {
+        AnimalSpecification spec = new AnimalSpecification(filter);
+        Page<AnimalEntity> animalEntities = animalRepository.findAll(spec, pageable);
         return animalEntities.map(animalMapper::toAnimal);
     }
 
@@ -152,7 +147,6 @@ public class AnimalRepositoryGateway implements AnimalGateway {
         }
         return Optional.empty();
     }
-
 
     @Transactional
     @Override
