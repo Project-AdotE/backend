@@ -2,8 +2,10 @@ package com.adote.api.infra.presentation;
 
 import com.adote.api.core.entities.ChavePix;
 import com.adote.api.core.usecases.chavePix.get.GetAllChavesCase;
+import com.adote.api.core.usecases.chavePix.get.GetChavesByOrgIdCase;
 import com.adote.api.core.usecases.chavePix.patch.UpdateChaveByIdCase;
 import com.adote.api.core.usecases.chavePix.post.CreateChaveCase;
+import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.chavePix.request.ChavePixRequestDTO;
 import com.adote.api.infra.dtos.chavePix.response.ChavePixResponseDTO;
 import com.adote.api.infra.dtos.chavePix.response.ChavePixSimplificadaDTO;
@@ -20,8 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChavePixController {
 
+    private final GetOrganizacaoById getOrganizacaoById;
+
     private final CreateChaveCase createChaveCase;
     private final GetAllChavesCase getAllChavesCase;
+    private final GetChavesByOrgIdCase getChavesByOrgIdCase;
     private final UpdateChaveByIdCase updateChaveByIdCase;
 
     private final ChavePixMapper chavePixMapper;
@@ -34,6 +39,22 @@ public class ChavePixController {
                 .toList());
     }
 
+    @GetMapping("/organizacao/{id}")
+    public ResponseEntity<List<ChavePixSimplificadaDTO>> getChavesPixByOrganizacao(@PathVariable Long id) {
+        if (getOrganizacaoById.execute(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<ChavePix> chavesPix = getChavesByOrgIdCase.execute(id);
+        List<ChavePixSimplificadaDTO> response = chavesPix.stream()
+                .map(chavePix -> new ChavePixSimplificadaDTO(
+                        chavePix.id(),
+                        chavePix.tipo(),
+                        chavePix.chave()))
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public ResponseEntity<ChavePixResponseDTO> createChave(@RequestBody ChavePixRequestDTO chavePixRequestDTO) {

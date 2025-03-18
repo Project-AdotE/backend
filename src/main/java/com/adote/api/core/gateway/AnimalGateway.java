@@ -6,6 +6,7 @@ import com.adote.api.core.Enums.SexoEnum;
 import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
+import com.adote.api.infra.filters.animal.AnimalFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,14 +18,7 @@ public interface AnimalGateway {
 
     Animal createAnimal(AnimalRequestDTO animalRequestDTO, List<MultipartFile> fotos);
 
-    Page<Animal> getAllAnimaisCase(
-            TipoAnimalEnum tipo,
-            IdadeEnum idade,
-            PorteEnum porte,
-            SexoEnum sexo,
-            Long orgId,
-            Pageable pageable
-    );
+    Page<Animal> getAllAnimais(AnimalFilter filter, Pageable pageable);
 
     Optional<Animal> getAnimalById(Long id);
 

@@ -10,8 +10,11 @@ import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
 import com.adote.api.core.usecases.animal.get.GetAnimalByIdCase;
 import com.adote.api.core.usecases.animal.patch.UpdateAnimalCase;
 import com.adote.api.core.usecases.animal.post.CreateAnimalCase;
+import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.dtos.animal.response.AnimalResponseDTO;
+import com.adote.api.infra.dtos.page.response.PageResponseDTO;
+import com.adote.api.infra.filters.animal.AnimalFilter;
 import com.adote.api.infra.mappers.AnimalMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,44 +42,51 @@ import java.util.stream.Collectors;
 @Tag(name = "Animal", description = "Responsavel pelo gerenciamento de animais")
 public class AnimalController {
 
+    private final GetOrganizacaoById getOrganizacaoById;
+
     private final CreateAnimalCase createAnimalCase;
     private final UpdateAnimalCase updateAnimalCase;
     private final GetAllAnimaisCase getAllAnimaisCase;
     private final GetAnimalByIdCase getAnimalByIdCase;
     private final DeleteAnimalByIdCase deleteAnimalByIdCase;
+
     private final AnimalMapper animalMapper;
 
-    @Operation(summary = "Busca de animais", description = "Busca por todos os animais ou por organização",
-            security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "200", description = "Retorna lista de animais")
-    @GetMapping("/find/all")
-    public ResponseEntity<Map<String, Object>> findAll(
+    @GetMapping
+    public ResponseEntity<PageResponseDTO<AnimalResponseDTO>> findAll(
             @RequestParam(required = false) TipoAnimalEnum tipo,
             @RequestParam(required = false) IdadeEnum idade,
             @RequestParam(required = false) PorteEnum porte,
             @RequestParam(required = false) SexoEnum sexo,
-            @RequestParam(required = false) Long orgId,
             @RequestParam(defaultValue = "0") int page) {
+
+        AnimalFilter filter = new AnimalFilter();
+        filter.setTipo(tipo);
+        filter.setIdade(idade);
+        filter.setPorte(porte);
+        filter.setSexo(sexo);
 
         Pageable pageable = PageRequest.of(page, 20);
 
-        Page<Animal> animalPage = getAllAnimaisCase.execute(tipo, idade, porte, sexo, orgId, pageable);
+        Page<Animal> animalPage = getAllAnimaisCase.execute(filter, pageable);
 
-        List<AnimalResponseDTO> animalResponseDTOList = animalPage.stream()
+        List<AnimalResponseDTO> animalResponseDTOList = animalPage.getContent().stream()
                 .map(animalMapper::toResponseDTO)
                 .collect(Collectors.toList());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("animals", animalResponseDTOList);
-        response.put("currentPage", animalPage.getNumber());
-        response.put("totalItems", animalPage.getTotalElements());
-        response.put("totalPages", animalPage.getTotalPages());
+        PageResponseDTO<AnimalResponseDTO> response = new PageResponseDTO<>(
+                animalResponseDTOList,
+                animalPage.getNumber(),
+                animalPage.getTotalElements(),
+                animalPage.getTotalPages()
+        );
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/find")
-    public ResponseEntity<AnimalResponseDTO> findAnimalById(@RequestParam Long id) {
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AnimalResponseDTO> findAnimalById(@PathVariable Long id) {
         Optional<Animal> animal = getAnimalByIdCase.execute(id);
         if(animal.isPresent()) {
             return ResponseEntity.ok(animalMapper.toResponseDTO(animal.get()));
@@ -84,7 +94,47 @@ public class AnimalController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+
+    @GetMapping("/organizacao/{id}")
+    public ResponseEntity<PageResponseDTO<AnimalResponseDTO>> getAnimaisByOrganizacao(
+            @PathVariable Long id,
+            @RequestParam(required = false) TipoAnimalEnum tipo,
+            @RequestParam(required = false) IdadeEnum idade,
+            @RequestParam(required = false) PorteEnum porte,
+            @RequestParam(required = false) SexoEnum sexo,
+            @RequestParam(defaultValue = "0") int page) {
+
+        if (getOrganizacaoById.execute(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        AnimalFilter filter = new AnimalFilter();
+        filter.setTipo(tipo);
+        filter.setIdade(idade);
+        filter.setPorte(porte);
+        filter.setSexo(sexo);
+        filter.setOrganizacaoId(id);
+
+        Pageable pageable = PageRequest.of(page, 20);
+
+        Page<Animal> animalPage = getAllAnimaisCase.execute(filter, pageable);
+
+        List<AnimalResponseDTO> animais = animalPage.getContent().stream()
+                .map(animalMapper::toResponseDTO)
+                .toList();
+
+        PageResponseDTO<AnimalResponseDTO> response = new PageResponseDTO<>(
+                animais,
+                animalPage.getNumber(),
+                animalPage.getTotalElements(),
+                animalPage.getTotalPages()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> createAnimal(
             @RequestPart("dados") AnimalRequestDTO requestDTO,
             @RequestPart(value = "fotos", required = false) List<MultipartFile> fotos) {
@@ -99,7 +149,7 @@ public class AnimalController {
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
     }
 
-    @PatchMapping(value = "/update/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AnimalResponseDTO> updateAnimal(
             @PathVariable Long id,
             @RequestPart(value = "dados", required = false) AnimalRequestDTO requestDTO,
@@ -115,9 +165,9 @@ public class AnimalController {
         return ResponseEntity.ok(animalMapper.toResponseDTO(updatedAnimal));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteAnimalById(@RequestParam Long animalId) {
-        deleteAnimalByIdCase.execute(animalId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAnimalById(@PathVariable Long id) {
+        deleteAnimalByIdCase.execute(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

@@ -2,6 +2,7 @@ package com.adote.api.core.usecases.organizacao.get;
 
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.gateway.OrganizacaoGateway;
+import com.adote.api.infra.filters.organizacao.OrganizacaoFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,13 +15,7 @@ public class GetAllOrganizacoesCaseImpl implements GetAllOrganizacoesCase {
     }
 
     @Override
-    public Page<Organizacao> execute(Pageable pageable) {
-        return organizacaoGateway.getAllorganizacoes(pageable);
+    public Page<Organizacao> execute(OrganizacaoFilter filter, Pageable pageable) {
+        return organizacaoGateway.getAllorganizacoes(filter, pageable);
     }
-
-    @Override
-    public Page<Organizacao> execute(String cidade, String estado, Pageable pageable) {
-        return organizacaoGateway.getAllOrganizacoesWithFilters(cidade, estado, pageable);
-    }
-
 }

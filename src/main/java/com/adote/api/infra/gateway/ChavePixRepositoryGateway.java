@@ -12,12 +12,13 @@ import com.adote.api.infra.persistence.entities.ChavePixEntity;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import com.adote.api.infra.persistence.repositories.ChavePixRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class ChavePixRepositoryGateway implements ChavePixGateway {
 

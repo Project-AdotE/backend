@@ -38,11 +38,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/animal/find/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/animal/find").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/animal/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/organizacao/find/all").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/organizacao/find/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/organizacao").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/organizacao/{id}").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/chavepix/organizacao/{id}").permitAll()
 
                         .anyRequest().authenticated()
                 )
