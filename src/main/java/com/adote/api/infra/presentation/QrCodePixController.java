@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/qrcodepix")
 @RequiredArgsConstructor
-@Tag(name = "QrCodePix", description = "Responsável por gerar o QR Code do Pix.")
+@Tag(name = "Qr Code Pix", description = "Responsável por gerar o QR Code da chave PIX")
 public class QrCodePixController {
 
     @Autowired

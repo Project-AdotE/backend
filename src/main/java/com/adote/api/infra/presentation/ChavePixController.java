@@ -9,6 +9,7 @@ import com.adote.api.infra.dtos.chavePix.response.ChavePixResponseDTO;
 import com.adote.api.infra.dtos.chavePix.response.ChavePixSimplificadaDTO;
 import com.adote.api.infra.dtos.chavePix.update.ChavePixUpdateDTO;
 import com.adote.api.infra.mappers.ChavePixMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/chavepix")
 @RequiredArgsConstructor
+@Tag(name = "Chave Pix", description = "Responsável pelo gerenciamento das chaves PIX das organizações")
 public class ChavePixController {
 
     private final CreateChaveCase createChaveCase;
