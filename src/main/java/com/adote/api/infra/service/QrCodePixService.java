@@ -3,18 +3,17 @@ package com.adote.api.infra.service;
 import com.adote.api.infra.dtos.qrCodePix.request.QrCodeRequestDTO;
 import com.adote.api.infra.dtos.qrCodePix.response.QrCodeResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.*;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class QrCodePixService {
-
-    private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final String URL = "https://www.gerarpix.com.br/emvqr-static";
 
@@ -26,34 +25,41 @@ public class QrCodePixService {
             requestBody.put("name", qrCodeRequestDTO.nome());
             requestBody.put("city", qrCodeRequestDTO.cidade());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-
-            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+            String jsonBody = objectMapper.writeValueAsString(requestBody);
 
             System.out.println("Request URL: " + URL);
-            System.out.println("Request Headers: " + headers);
-            System.out.println("Request Body: " + objectMapper.writeValueAsString(requestBody));
+            System.out.println("Request Body: " + jsonBody);
 
-            ResponseEntity<String> rawResponse = restTemplate.postForEntity(URL, requestEntity, String.class);
+            Connection connection = Jsoup.connect(URL)
+                    .ignoreContentType(true)
+                    .ignoreHttpErrors(true)
+                    .method(Connection.Method.POST)
+                    .requestBody(jsonBody)
+                    .header("Content-Type", "application/json")
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                    .header("Accept", "application/json, text/plain, */*")
+                    .header("Accept-Language", "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
+                    .header("Origin", "https://www.gerarpix.com.br")
+                    .header("Referer", "https://www.gerarpix.com.br/")
+                    .header("Sec-Ch-Ua", "\"Chromium\";v=\"120\", \"Google Chrome\";v=\"120\", \"Not=A?Brand\";v=\"99\"")
+                    .header("Sec-Ch-Ua-Mobile", "?0")
+                    .header("Sec-Ch-Ua-Platform", "\"Windows\"")
+                    .header("Sec-Fetch-Dest", "empty")
+                    .header("Sec-Fetch-Mode", "cors")
+                    .header("Sec-Fetch-Site", "same-origin")
+                    .timeout(30000);
 
-            System.out.println("Response Status: " + rawResponse.getStatusCode());
-            System.out.println("Response Headers: " + rawResponse.getHeaders());
-            System.out.println("Response Body: " + rawResponse.getBody());
+            Connection.Response response = connection.execute();
 
-            if (rawResponse.getStatusCode().is2xxSuccessful() && rawResponse.getBody() != null) {
-                QrCodeResponseDTO responseDTO = objectMapper.readValue(rawResponse.getBody(), QrCodeResponseDTO.class);
-                return ResponseEntity.status(rawResponse.getStatusCode()).body(responseDTO);
+            System.out.println("Response Status: " + response.statusCode());
+            System.out.println("Response Body: " + response.body());
+
+            if (response.statusCode() == 200 && response.body() != null) {
+                QrCodeResponseDTO responseDTO = objectMapper.readValue(response.body(), QrCodeResponseDTO.class);
+                return ResponseEntity.ok(responseDTO);
             } else {
-                return ResponseEntity.status(rawResponse.getStatusCode()).body(null);
+                return ResponseEntity.status(response.statusCode()).body(null);
             }
-
-        } catch (HttpStatusCodeException ex) {
-            System.out.println("Error Status: " + ex.getStatusCode());
-            System.out.println("Error Response: " + ex.getResponseBodyAsString());
-            return ResponseEntity.status(ex.getStatusCode()).body(null);
-
         } catch (Exception ex) {
             System.out.println("Unexpected Error: " + ex.getMessage());
             ex.printStackTrace();
@@ -61,7 +67,6 @@ public class QrCodePixService {
         }
     }
 }
-
 //@Service
 //public class QrCodePixService {
 //
