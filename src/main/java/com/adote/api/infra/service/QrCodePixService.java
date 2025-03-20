@@ -3,21 +3,23 @@ package com.adote.api.infra.service;
 import com.adote.api.infra.dtos.qrCodePix.request.QrCodeRequestDTO;
 import com.adote.api.infra.dtos.qrCodePix.response.QrCodeResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.JavascriptExecutor;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class QrCodePixService {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String URL = "https://www.gerarpix.com.br/emvqr-static";
+    private static final String URL = "https://www.gerarpix.com.br";
 
     public ResponseEntity<QrCodeResponseDTO> gerarQrCode(QrCodeRequestDTO qrCodeRequestDTO) {
+        WebDriver driver = null;
         try {
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("key_type", qrCodeRequestDTO.tipo());
@@ -30,40 +32,79 @@ public class QrCodePixService {
             System.out.println("Request URL: " + URL);
             System.out.println("Request Body: " + jsonBody);
 
-            Connection connection = Jsoup.connect(URL)
-                    .ignoreContentType(true)
-                    .ignoreHttpErrors(true)
-                    .method(Connection.Method.POST)
-                    .requestBody(jsonBody)
-                    .header("Content-Type", "application/json")
-                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-                    .header("Accept", "application/json, text/plain, */*")
-                    .header("Accept-Language", "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
-                    .header("Origin", "https://www.gerarpix.com.br")
-                    .header("Referer", "https://www.gerarpix.com.br/")
-                    .header("Sec-Ch-Ua", "\"Chromium\";v=\"120\", \"Google Chrome\";v=\"120\", \"Not=A?Brand\";v=\"99\"")
-                    .header("Sec-Ch-Ua-Mobile", "?0")
-                    .header("Sec-Ch-Ua-Platform", "\"Windows\"")
-                    .header("Sec-Fetch-Dest", "empty")
-                    .header("Sec-Fetch-Mode", "cors")
-                    .header("Sec-Fetch-Site", "same-origin")
-                    .timeout(30000);
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
+            options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 
-            Connection.Response response = connection.execute();
+            driver = new ChromeDriver(options);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 
-            System.out.println("Response Status: " + response.statusCode());
-            System.out.println("Response Body: " + response.body());
+            driver.get(URL);
 
-            if (response.statusCode() == 200 && response.body() != null) {
-                QrCodeResponseDTO responseDTO = objectMapper.readValue(response.body(), QrCodeResponseDTO.class);
+            Thread.sleep(10000);
+
+            String script = String.format(
+                    "return fetch('%s/emvqr-static', {" +
+                            "  method: 'POST'," +
+                            "  headers: {" +
+                            "    'Content-Type': 'application/json'," +
+                            "    'Accept': 'application/json'" +
+                            "  }," +
+                            "  body: JSON.stringify(%s)" +
+                            "}).then(response => {" +
+                            "  return {" +
+                            "    status: response.status," +
+                            "    body: response.text()" +
+                            "  };" +
+                            "});", URL, jsonBody);
+
+            Map<String, Object> jsResponse = (Map<String, Object>) ((JavascriptExecutor) driver).executeAsyncScript(
+                    "const callback = arguments[arguments.length - 1];" +
+                            "const doFetch = async () => {" +
+                            "  try {" +
+                            "    const response = await fetch('" + URL + "/emvqr-static', {" +
+                            "      method: 'POST'," +
+                            "      headers: {" +
+                            "        'Content-Type': 'application/json'," +
+                            "        'Accept': 'application/json'" +
+                            "      }," +
+                            "      body: '" + jsonBody.replace("'", "\\'") + "'" +
+                            "    });" +
+                            "    const status = response.status;" +
+                            "    const text = await response.text();" +
+                            "    callback({status: status, body: text});" +
+                            "  } catch (error) {" +
+                            "    callback({status: 500, body: error.toString()});" +
+                            "  }" +
+                            "};" +
+                            "doFetch();"
+            );
+
+            int status = ((Long) jsResponse.get("status")).intValue();
+            String responseBody = (String) jsResponse.get("body");
+
+            // Log para debug
+            System.out.println("Response Status: " + status);
+            System.out.println("Response Body: " + responseBody);
+
+            if (status == 200 && responseBody != null) {
+                QrCodeResponseDTO responseDTO = objectMapper.readValue(responseBody, QrCodeResponseDTO.class);
                 return ResponseEntity.ok(responseDTO);
             } else {
-                return ResponseEntity.status(response.statusCode()).body(null);
+                return ResponseEntity.status(status).body(null);
             }
         } catch (Exception ex) {
             System.out.println("Unexpected Error: " + ex.getMessage());
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } finally {
+            if (driver != null) {
+                driver.quit();
+            }
         }
     }
 }
