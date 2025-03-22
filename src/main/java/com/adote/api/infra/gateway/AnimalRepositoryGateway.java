@@ -128,7 +128,9 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     @Override
     public Page<Animal> getAllAnimais(AnimalFilter filter, Pageable pageable) {
-        getOrganizacaoById.execute(filter.getOrganizacaoId());
+        if(filter.getOrganizacaoId() != null) {
+            getOrganizacaoById.execute(filter.getOrganizacaoId());
+        }
 
         AnimalSpecification spec = new AnimalSpecification(filter);
         Page<AnimalEntity> animalEntities = animalRepository.findAll(spec, pageable);
