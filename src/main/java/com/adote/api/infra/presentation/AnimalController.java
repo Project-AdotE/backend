@@ -5,6 +5,7 @@ import com.adote.api.core.Enums.PorteEnum;
 import com.adote.api.core.Enums.SexoEnum;
 import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
+import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.usecases.animal.delete.DeleteAnimalByIdCase;
 import com.adote.api.core.usecases.animal.get.GetAllAnimaisCase;
 import com.adote.api.core.usecases.animal.get.GetAnimalByIdCase;
@@ -103,10 +104,6 @@ public class AnimalController {
             @RequestParam(required = false) PorteEnum porte,
             @RequestParam(required = false) SexoEnum sexo,
             @RequestParam(defaultValue = "0") int page) {
-
-        if (getOrganizacaoById.execute(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
 
         AnimalFilter filter = new AnimalFilter();
         filter.setTipo(tipo);

@@ -1,5 +1,6 @@
 package com.adote.api.infra.config.auth;
 
+import com.adote.api.infra.exception.auth.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final SecurityFilter filter;
 
     @Bean
@@ -41,14 +43,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/animal/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/organizacao").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/organizacao/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/organizacao/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/chavepix/organizacao/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/chavepix/organizacao/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/qrcodepix").permitAll()
 
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

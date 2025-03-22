@@ -1,9 +1,8 @@
 package com.adote.api.core.usecases.organizacao.get;
 
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.exceptions.oraganizacao.OrganizacaoNotFoundException;
 import com.adote.api.core.gateway.OrganizacaoGateway;
-
-import java.util.Optional;
 
 public class GetOrganizacaoByIdImpl implements GetOrganizacaoById {
 
@@ -14,7 +13,8 @@ public class GetOrganizacaoByIdImpl implements GetOrganizacaoById {
     }
 
     @Override
-    public Optional<Organizacao> execute(Long id) {
-        return organizacaoGateway.getOrganizacaoById(id);
+    public Organizacao execute(Long id) {
+        return organizacaoGateway.getOrganizacaoById(id)
+                .orElseThrow(() -> new OrganizacaoNotFoundException(id.toString()));
     }
 }

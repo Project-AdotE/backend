@@ -78,19 +78,14 @@ public class OrganizacaoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OrganizacaoBaseDTO> getOrganizacaoById(@PathVariable Long id) {
-        return getOrganizacaoById.execute(id)
-                .map(organizacao -> ResponseEntity.ok(organizacaoMapper.toBaseDTO(organizacao)))
-                .orElse(ResponseEntity.notFound().build());
+        Organizacao organizacao = getOrganizacaoById.execute(id);
+        return ResponseEntity.ok(organizacaoMapper.toBaseDTO(organizacao));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
-        return getOrganizacaoById.execute(id)
-                .map(organizacao -> {
-                    deleteOrganizacaoById.execute(id);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        deleteOrganizacaoById.execute(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

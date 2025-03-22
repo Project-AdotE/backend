@@ -7,7 +7,7 @@ import com.adote.api.core.gateway.AnimalGateway;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
-import com.adote.api.infra.config.s3.S3StorageService;
+import com.adote.api.infra.config.aws.s3.S3StorageService;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.filters.animal.AnimalFilter;
 import com.adote.api.infra.filters.animal.AnimalSpecification;
@@ -49,26 +49,23 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     @Override
     public Animal createAnimal(AnimalRequestDTO animalRequestDTO, List<MultipartFile> fotos) {
-        Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(animalRequestDTO.organizacao_id());
+        Organizacao organizacao = getOrganizacaoById.execute(animalRequestDTO.organizacao_id());
 
-        if (organizacaoOptional.isPresent()) {
-            AnimalEntity animalEntity = animalMapper.toEntity(animalRequestDTO);
-            animalEntity.setOrganizacao(organizacaoMapper.toEntity(organizacaoOptional.get()));
+        AnimalEntity animalEntity = animalMapper.toEntity(animalRequestDTO);
+        animalEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
 
-            AnimalEntity savedAnimal = animalRepository.save(animalEntity);
+        AnimalEntity savedAnimal = animalRepository.save(animalEntity);
 
-            if(fotos != null) {
-                List<FotoAnimal> fotoAnimalList = fotos.stream().map(foto -> {
-                    String url = s3StorageService.uploadFile(foto);
-                    return new FotoAnimal(null, url, animalMapper.toAnimal(savedAnimal));
-                }).toList();
+        if(fotos != null) {
+            List<FotoAnimal> fotoAnimalList = fotos.stream().map(foto -> {
+                String url = s3StorageService.uploadFile(foto);
+                return new FotoAnimal(null, url, animalMapper.toAnimal(savedAnimal));
+            }).toList();
 
-                createMultipleFotosCase.execute(fotoAnimalList);
-            }
-
-            return animalMapper.toAnimal(savedAnimal);
+            createMultipleFotosCase.execute(fotoAnimalList);
         }
-        return null;
+
+        return animalMapper.toAnimal(savedAnimal);
     }
 
     @Override
@@ -97,10 +94,8 @@ public class AnimalRepositoryGateway implements AnimalGateway {
             if (animalRequestDTO.srd() != null) animalEntity.setSrd(animalRequestDTO.srd());
 
             if (animalRequestDTO.organizacao_id() != null) {
-                Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(animalRequestDTO.organizacao_id());
-                if (organizacaoOptional.isPresent()) {
-                    animalEntity.setOrganizacao(organizacaoMapper.toEntity(organizacaoOptional.get()));
-                }
+                Organizacao organizacao = getOrganizacaoById.execute(animalRequestDTO.organizacao_id());
+                animalEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
             }
 
             animalRepository.save(animalEntity);
@@ -133,6 +128,8 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     @Override
     public Page<Animal> getAllAnimais(AnimalFilter filter, Pageable pageable) {
+        getOrganizacaoById.execute(filter.getOrganizacaoId());
+
         AnimalSpecification spec = new AnimalSpecification(filter);
         Page<AnimalEntity> animalEntities = animalRepository.findAll(spec, pageable);
         return animalEntities.map(animalMapper::toAnimal);

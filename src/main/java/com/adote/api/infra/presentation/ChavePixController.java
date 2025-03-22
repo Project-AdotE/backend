@@ -43,10 +43,6 @@ public class ChavePixController {
 
     @GetMapping("/organizacao/{id}")
     public ResponseEntity<List<ChavePixSimplificadaDTO>> getChavesPixByOrganizacao(@PathVariable Long id) {
-        if (getOrganizacaoById.execute(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
         List<ChavePix> chavesPix = getChavesByOrgIdCase.execute(id);
         List<ChavePixSimplificadaDTO> response = chavesPix.stream()
                 .map(chavePix -> new ChavePixSimplificadaDTO(

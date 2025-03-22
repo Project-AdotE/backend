@@ -1,6 +1,7 @@
 package com.adote.api.infra.presentation;
 
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.exceptions.auth.LoginInvalidoException;
 import com.adote.api.core.usecases.organizacao.post.CreateOrganizacaoCase;
 import com.adote.api.infra.config.auth.TokenService;
 import com.adote.api.infra.dtos.organizacao.request.LoginRequestDTO;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,13 +40,17 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginOrganizacao(@RequestBody LoginRequestDTO requestDTO) {
-        UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(requestDTO.email(), requestDTO.senha());
-        Authentication authenticate = authenticationManager.authenticate(userAndPass);
-        OrganizacaoEntity org = (OrganizacaoEntity) authenticate.getPrincipal();
+        try{
+            UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(requestDTO.email(), requestDTO.senha());
+            Authentication authenticate = authenticationManager.authenticate(userAndPass);
+            OrganizacaoEntity org = (OrganizacaoEntity) authenticate.getPrincipal();
 
-        String token = tokenService.generateToken(org);
+            String token = tokenService.generateToken(org);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        }catch (BadCredentialsException ex){
+            throw new LoginInvalidoException();
+        }
     }
 
     @Operation(summary = "Registro", description = "Registro de usuários na plataforma")

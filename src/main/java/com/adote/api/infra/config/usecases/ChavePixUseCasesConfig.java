@@ -1,4 +1,4 @@
-package com.adote.api.infra.config;
+package com.adote.api.infra.config.usecases;
 
 import com.adote.api.core.usecases.chavePix.get.GetAllChavesCase;
 import com.adote.api.core.usecases.chavePix.get.GetAllChavesCaseImpl;

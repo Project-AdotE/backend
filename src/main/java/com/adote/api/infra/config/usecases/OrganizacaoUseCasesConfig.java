@@ -1,4 +1,4 @@
-package com.adote.api.infra.config;
+package com.adote.api.infra.config.usecases;
 
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoByIdImpl;

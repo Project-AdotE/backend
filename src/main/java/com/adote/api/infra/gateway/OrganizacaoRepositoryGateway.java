@@ -2,6 +2,7 @@ package com.adote.api.infra.gateway;
 
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.exceptions.oraganizacao.OrganizacaoNotFoundException;
 import com.adote.api.core.gateway.OrganizacaoGateway;
 import com.adote.api.infra.filters.animal.AnimalFilter;
 import com.adote.api.infra.filters.animal.AnimalSpecification;
@@ -54,6 +55,9 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
 
     @Override
     public void deleteOrganizacaoById(Long id) {
+        if(!getOrganizacaoById(id).isPresent()) {
+            throw new OrganizacaoNotFoundException(id.toString());
+        }
         organizacaoRepository.deleteById(id);
     }
 }

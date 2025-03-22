@@ -1,7 +1,5 @@
-package com.adote.api.infra.config;
+package com.adote.api.infra.config.usecases;
 
-import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByAnimalIdCase;
-import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByAnimalIdCaseImpl;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCaseImpl;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateFotoAnimalCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateFotoAnimalCaseImpl;

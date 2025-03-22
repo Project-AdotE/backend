@@ -1,4 +1,4 @@
-package com.adote.api.infra.config.secrets;
+package com.adote.api.infra.config.aws.secrets;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;

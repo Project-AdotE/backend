@@ -1,8 +1,9 @@
-package com.adote.api.infra.config.s3;
+package com.adote.api.infra.config.aws.s3;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -22,7 +23,7 @@ public class S3StorageService {
     public S3StorageService() {
         this.s3Client = S3Client.builder()
                 .region(REGION)
-                .credentialsProvider(DefaultCredentialsProvider.create())
+                .credentialsProvider(ProfileCredentialsProvider.create("adote"))
                 .build();
     }
 

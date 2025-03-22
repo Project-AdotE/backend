@@ -32,15 +32,13 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
 
     @Override
     public ChavePix createChavePix(ChavePixRequestDTO chavePixRequestDTO) {
-        Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(chavePixRequestDTO.organizacao_id());
-        if (organizacaoOptional.isPresent()) {
-            OrganizacaoEntity organizacao = organizacaoMapper.toEntity(organizacaoOptional.get());
-            ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePixRequestDTO);
-            chavePixEntity.setOrganizacao(organizacao);
-            chavePixRepository.save(chavePixEntity);
-            return chavePixMapper.toChavePix(chavePixEntity);
-        }
-        return null;
+
+        Organizacao organizacao = getOrganizacaoById.execute(chavePixRequestDTO.organizacao_id());
+        ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePixRequestDTO);
+        chavePixEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
+        chavePixRepository.save(chavePixEntity);
+        return chavePixMapper.toChavePix(chavePixEntity);
+
     }
 
     @Override
@@ -53,14 +51,11 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
 
     @Override
     public List<ChavePix> getChavePixByOrgId(Long orgId) {
-        Optional<Organizacao> organizacaoOptional = getOrganizacaoById.execute(orgId);
-        if (organizacaoOptional.isPresent()) {
-            List<ChavePixEntity> chavePixEntityList = chavePixRepository.findAllByOrganizacao_Id(orgId);
-            return chavePixEntityList.stream()
-                    .map(chavePixMapper::toChavePix)
-                    .toList();
-        }
-        return List.of();
+        Organizacao organizacao = getOrganizacaoById.execute(orgId);
+        List<ChavePixEntity> chavePixEntityList = chavePixRepository.findAllByOrganizacao_Id(orgId);
+        return chavePixEntityList.stream()
+                .map(chavePixMapper::toChavePix)
+                .toList();
     }
 
     @Override
