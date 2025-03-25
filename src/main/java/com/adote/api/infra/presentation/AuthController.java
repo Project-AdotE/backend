@@ -13,6 +13,7 @@ import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,7 +40,7 @@ public class AuthController {
     @Operation(summary = "Login", description = "Login de usuários na plataforma")
     @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginOrganizacao(@RequestBody LoginRequestDTO requestDTO) {
+    public ResponseEntity<LoginResponseDTO> loginOrganizacao(@RequestBody @Valid LoginRequestDTO requestDTO) {
         try{
             UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(requestDTO.email(), requestDTO.senha());
             Authentication authenticate = authenticationManager.authenticate(userAndPass);
@@ -56,7 +57,7 @@ public class AuthController {
     @Operation(summary = "Registro", description = "Registro de usuários na plataforma")
     @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso")
     @PostMapping("/register")
-    public ResponseEntity<OrganizacaoResponseDTO> createOrganizacao(@RequestBody OrganizacaoRequestDTO requestDTO) {
+    public ResponseEntity<OrganizacaoResponseDTO> createOrganizacao(@RequestBody @Valid OrganizacaoRequestDTO requestDTO) {
         Organizacao newOrganizacao = createOrganizacaoCase.execute(organizacaoMapper.toOrganizacao(requestDTO));
         return ResponseEntity.ok().body(organizacaoMapper.toResponseDTO(newOrganizacao));
     }

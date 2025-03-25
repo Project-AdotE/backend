@@ -13,6 +13,8 @@ public interface OrganizacaoGateway {
 
     Optional<Organizacao> getOrganizacaoById(Long id);
 
+    Optional<Organizacao> getOrganizacaoByCnpj(String cnpj);
+
     void deleteOrganizacaoById(Long id);
 
     Page<Organizacao> getAllorganizacoes(OrganizacaoFilter filter, Pageable pageable);

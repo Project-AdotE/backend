@@ -57,9 +57,6 @@ public class ChavePixController {
     @PostMapping
     public ResponseEntity<ChavePixResponseDTO> createChave(@RequestBody ChavePixRequestDTO chavePixRequestDTO) {
         ChavePix newChave = createChaveCase.execute(chavePixRequestDTO);
-        if (newChave == null) {
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.ok(chavePixMapper.toResponseDTO(newChave));
     }
 

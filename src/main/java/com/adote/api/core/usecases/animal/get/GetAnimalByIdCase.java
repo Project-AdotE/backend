@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface GetAnimalByIdCase {
 
-    Optional<Animal> execute(Long id);
+    Animal execute(Long id);
 
 }

@@ -15,4 +15,5 @@ public interface OrganizacaoRepository extends JpaRepository<OrganizacaoEntity, 
     Optional<UserDetails> getOrganizacaoEntityByEmail(String email);
     Page<OrganizacaoEntity> findAll(Pageable pageable);
 
+    Optional<OrganizacaoEntity> findByCnpj(String cnpj);
 }

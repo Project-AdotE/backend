@@ -32,13 +32,12 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
 
     @Override
     public ChavePix createChavePix(ChavePixRequestDTO chavePixRequestDTO) {
-
         Organizacao organizacao = getOrganizacaoById.execute(chavePixRequestDTO.organizacao_id());
+
         ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePixRequestDTO);
         chavePixEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
         chavePixRepository.save(chavePixEntity);
         return chavePixMapper.toChavePix(chavePixEntity);
-
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
 
     @Override
     public List<ChavePix> getChavePixByOrgId(Long orgId) {
-        Organizacao organizacao = getOrganizacaoById.execute(orgId);
+        getOrganizacaoById.execute(orgId);
         List<ChavePixEntity> chavePixEntityList = chavePixRepository.findAllByOrganizacao_Id(orgId);
         return chavePixEntityList.stream()
                 .map(chavePixMapper::toChavePix)

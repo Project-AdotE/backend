@@ -2,6 +2,7 @@ package com.adote.api.infra.gateway;
 
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.exceptions.oraganizacao.CnpjAlreadyExistsException;
 import com.adote.api.core.exceptions.oraganizacao.OrganizacaoNotFoundException;
 import com.adote.api.core.gateway.OrganizacaoGateway;
 import com.adote.api.infra.filters.animal.AnimalFilter;
@@ -38,7 +39,17 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
     }
 
     @Override
+    public Optional<Organizacao> getOrganizacaoByCnpj(String cnpj) {
+        Optional<OrganizacaoEntity> organizacaoEntity = organizacaoRepository.findByCnpj(cnpj);
+        return organizacaoEntity.map(organizacaoMapper::toOrganizacao);
+    }
+
+    @Override
     public Organizacao createOrganizacao(Organizacao organizacao) {
+        if(getOrganizacaoByCnpj(organizacao.cnpj()).isPresent()) {
+            throw new CnpjAlreadyExistsException(organizacao.cnpj());
+        }
+
         OrganizacaoEntity organizacaoEntity = organizacaoMapper.toEntity(organizacao);
         organizacaoEntity.setSenha(passwordEncoder.encode(organizacaoEntity.getSenha()));
         return organizacaoMapper.toOrganizacao(organizacaoRepository.save(organizacaoEntity));
@@ -47,15 +58,12 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
     @Override
     public Optional<Organizacao> getOrganizacaoById(Long id) {
         Optional<OrganizacaoEntity> organizacaoEntity = organizacaoRepository.findById(id);
-        if (organizacaoEntity.isPresent()) {
-            return Optional.of(organizacaoMapper.toOrganizacao(organizacaoEntity.get()));
-        }
-        return Optional.empty();
+        return organizacaoEntity.map(organizacaoMapper::toOrganizacao);
     }
 
     @Override
     public void deleteOrganizacaoById(Long id) {
-        if(!getOrganizacaoById(id).isPresent()) {
+        if(getOrganizacaoById(id).isEmpty()) {
             throw new OrganizacaoNotFoundException(id.toString());
         }
         organizacaoRepository.deleteById(id);

@@ -2,10 +2,7 @@ package com.adote.api.infra.config.usecases;
 
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoByIdImpl;
-import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCase;
-import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCaseImpl;
-import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
-import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoByIdImpl;
+import com.adote.api.core.usecases.organizacao.get.*;
 import com.adote.api.core.usecases.organizacao.post.CreateOrganizacaoCase;
 import com.adote.api.core.usecases.organizacao.post.CreateOrganizacaoCaseImpl;
 import com.adote.api.infra.gateway.OrganizacaoRepositoryGateway;
@@ -37,6 +34,11 @@ public class OrganizacaoUseCasesConfig {
     @Bean
     public GetAllOrganizacoesCase getAllOrganizacoesCase(){
         return new GetAllOrganizacoesCaseImpl(organizacaoRepositoryGateway);
+    }
+
+    @Bean
+    public GetOrganizacaoByCnpjCase getOrganizacaoByCnpjCase(){
+        return new GetOrganizacaoByCnpjCaseImpl(organizacaoRepositoryGateway);
     }
 
 }

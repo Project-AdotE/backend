@@ -3,6 +3,7 @@ package com.adote.api.infra.gateway;
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.FotoAnimal;
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.exceptions.animal.AnimalNotFoundException;
 import com.adote.api.core.gateway.AnimalGateway;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
@@ -71,14 +72,13 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     @Override
     public Animal updateAnimal(Long id, AnimalRequestDTO animalRequestDTO,
                                List<MultipartFile> novasFotos, List<String> fotosParaRemover) {
-        Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
 
+        Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
         if (animalOptional.isEmpty()) {
-            return null;
+            throw new AnimalNotFoundException(id.toString());
         }
 
         AnimalEntity animalEntity = animalOptional.get();
-
         if (animalRequestDTO != null) {
             if (animalRequestDTO.nome() != null) animalEntity.setNome(animalRequestDTO.nome());
             if (animalRequestDTO.descricao() != null) animalEntity.setDescricao(animalRequestDTO.descricao());
@@ -140,11 +140,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     @Override
     public Optional<Animal> getAnimalById(Long id) {
         Optional<AnimalEntity> animalOpt = animalRepository.findById(id);
-        if (animalOpt.isPresent()) {
-            AnimalEntity animalEntity = animalOpt.get();
-            return Optional.of(animalMapper.toAnimal(animalEntity));
-        }
-        return Optional.empty();
+        return animalOpt.map(animalMapper::toAnimal);
     }
 
     @Transactional
@@ -152,18 +148,20 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     public void deleteAnimalById(Long id) {
         Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
 
-        if (animalOptional.isPresent()) {
-            AnimalEntity animalEntity = animalOptional.get();
-
-            List<FotoAnimalEntity> fotosDoAnimal = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
-
-            for (FotoAnimalEntity foto : fotosDoAnimal) {
-                s3StorageService.deleteFile(foto.getUrl());
-
-                fotoAnimalRepository.delete(foto);
-            }
-
-            animalRepository.delete(animalEntity);
+        if(animalOptional.isEmpty()){
+            throw new AnimalNotFoundException(id.toString());
         }
+
+        AnimalEntity animalEntity = animalOptional.get();
+
+        List<FotoAnimalEntity> fotosDoAnimal = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
+
+        for (FotoAnimalEntity foto : fotosDoAnimal) {
+            s3StorageService.deleteFile(foto.getUrl());
+
+            fotoAnimalRepository.delete(foto);
+        }
+
+        animalRepository.delete(animalEntity);
     }
 }

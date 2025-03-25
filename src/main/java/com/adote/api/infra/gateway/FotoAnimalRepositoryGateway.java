@@ -2,6 +2,7 @@ package com.adote.api.infra.gateway;
 
 import com.adote.api.core.entities.FotoAnimal;
 import com.adote.api.core.gateway.FotoAnimalGateway;
+import com.adote.api.core.usecases.animal.get.GetAnimalByIdCase;
 import com.adote.api.infra.mappers.FotoAnimalMapper;
 import com.adote.api.infra.persistence.entities.FotoAnimalEntity;
 import com.adote.api.infra.persistence.repositories.FotoAnimalRepository;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class FotoAnimalRepositoryGateway implements FotoAnimalGateway {
+
+    private final GetAnimalByIdCase getAnimalByIdCase;
 
     private final FotoAnimalRepository fotoAnimalRepository;
     private final FotoAnimalMapper fotoAnimalMapper;
@@ -40,6 +43,7 @@ public class FotoAnimalRepositoryGateway implements FotoAnimalGateway {
 
     @Override
     public List<FotoAnimal> getFotosByAnimalId(Long id) {
+        getAnimalByIdCase.execute(id);
         List<FotoAnimalEntity> entityList = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
         return entityList.stream().map(fotoAnimalMapper::toFoto).toList();
     }

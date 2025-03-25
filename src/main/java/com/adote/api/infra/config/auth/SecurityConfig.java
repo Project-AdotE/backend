@@ -25,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final SecurityFilter filter;
 
     @Bean
@@ -37,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/api/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
 
@@ -51,8 +51,6 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

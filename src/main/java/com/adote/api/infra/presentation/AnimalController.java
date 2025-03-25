@@ -88,11 +88,8 @@ public class AnimalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimalResponseDTO> findAnimalById(@PathVariable Long id) {
-        Optional<Animal> animal = getAnimalByIdCase.execute(id);
-        if(animal.isPresent()) {
-            return ResponseEntity.ok(animalMapper.toResponseDTO(animal.get()));
-        }
-        return ResponseEntity.notFound().build();
+        Animal animal = getAnimalByIdCase.execute(id);
+        return ResponseEntity.ok(animalMapper.toResponseDTO(animal));
     }
 
 
@@ -136,12 +133,7 @@ public class AnimalController {
             @RequestPart("dados") AnimalRequestDTO requestDTO,
             @RequestPart(value = "fotos", required = false) List<MultipartFile> fotos) {
 
-        System.out.println("descrição recebida: " + requestDTO.descricao());
         Animal newAnimal = createAnimalCase.execute(requestDTO, fotos);
-
-        if (newAnimal == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
 
         return ResponseEntity.ok(animalMapper.toResponseDTO(newAnimal));
     }
@@ -154,10 +146,6 @@ public class AnimalController {
             @RequestPart(value = "fotosParaRemover", required = false) List<String> fotosParaRemover) {
 
         Animal updatedAnimal = updateAnimalCase.execute(id, requestDTO, novasFotos, fotosParaRemover);
-
-        if (updatedAnimal == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
 
         return ResponseEntity.ok(animalMapper.toResponseDTO(updatedAnimal));
     }

@@ -11,7 +11,6 @@ public class CreateOrganizacaoCaseImpl implements CreateOrganizacaoCase {
         this.organizacaoGateway = organizacaoGateway;
     }
 
-
     @Override
     public Organizacao execute(Organizacao organizacao) {
         return organizacaoGateway.createOrganizacao(organizacao);
