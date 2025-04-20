@@ -37,6 +37,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/reset-password/request").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/reset-password/verify").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/reset-password/new-password").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/api/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
 
