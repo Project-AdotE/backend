@@ -8,6 +8,7 @@ import com.adote.api.core.gateway.AnimalGateway;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
+import com.adote.api.infra.config.aws.s3.ImageOptimizationService;
 import com.adote.api.infra.config.aws.s3.S3StorageService;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.filters.animal.AnimalFilter;
@@ -21,11 +22,13 @@ import com.adote.api.infra.persistence.repositories.AnimalRepository;
 import com.adote.api.infra.persistence.repositories.FotoAnimalRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +45,8 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     private final CreateMultipleFotosCase createMultipleFotosCase;
 
     private final S3StorageService s3StorageService;
+    private final ImageOptimizationService imageOptimizationService;
+
 
     private final AnimalMapper animalMapper;
     private final OrganizacaoMapper organizacaoMapper;
@@ -59,8 +64,16 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
         if(fotos != null) {
             List<FotoAnimal> fotoAnimalList = fotos.stream().map(foto -> {
-                String url = s3StorageService.uploadFile(foto);
-                return new FotoAnimal(null, url, animalMapper.toAnimal(savedAnimal));
+
+                try{
+                    byte[] optimizedImage = imageOptimizationService.optimizeImage(foto);
+                    MultipartFile optimizedFile = imageOptimizationService.convertToMultipartFile(optimizedImage, foto.getOriginalFilename());
+
+                    String url = s3StorageService.uploadFile(optimizedFile, "animais");
+                    return new FotoAnimal(null, url, animalMapper.toAnimal(savedAnimal));
+                }catch (IOException e) {
+                    throw new RuntimeException("Erro ao otimizar imagem", e);
+                }
             }).toList();
 
             createMultipleFotosCase.execute(fotoAnimalList);
@@ -116,7 +129,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
         if (novasFotos != null && !novasFotos.isEmpty()) {
             List<FotoAnimal> fotoAnimalList = novasFotos.stream().map(foto -> {
-                String url = s3StorageService.uploadFile(foto);
+                String url = s3StorageService.uploadFile(foto, "animais");
                 return new FotoAnimal(null, url, animalMapper.toAnimal(animalEntity));
             }).toList();
 

@@ -61,7 +61,7 @@ import java.io.IOException;
 public class AWSSecretManagerService {
 
     private final SecretsManagerClient secretsManagerClient;
-    private static final Region REGION = Region.US_EAST_2;
+    private static final Region REGION = Region.SA_EAST_1;
 
     public AWSSecretManagerService() {
         this.secretsManagerClient = SecretsManagerClient.builder()

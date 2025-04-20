@@ -16,8 +16,8 @@ import java.util.UUID;
 public class S3StorageService {
 
     private final S3Client s3Client;
-    private static final String BUCKET_NAME = "adote-api-bucket";
-    private static final Region REGION = Region.US_EAST_2;
+    private static final String BUCKET_NAME = "adote-api-bucket-dev";
+    private static final Region REGION = Region.SA_EAST_1;
 
     public S3StorageService() {
         this.s3Client = S3Client.builder()
@@ -26,9 +26,10 @@ public class S3StorageService {
                 .build();
     }
 
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file, String prefixo) {
         try {
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            String fileName = prefixo + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(BUCKET_NAME)
                     .key(fileName)

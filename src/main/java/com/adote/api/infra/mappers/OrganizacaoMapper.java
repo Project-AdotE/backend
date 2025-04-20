@@ -20,6 +20,14 @@ public interface OrganizacaoMapper {
     Organizacao toOrganizacao(OrganizacaoEntity organizacaoEntity);
 
     Organizacao toOrganizacao(OrganizacaoRequestDTO requestDTO);
+
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "nome", source = "nome")
+    @Mapping(target = "numero", source = "numero")
+    @Mapping(target = "cnpj", source = "cnpj")
+    @Mapping(target = "endereco", source = "endereco")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "chavesPix", source = "chavesPix")
     OrganizacaoResponseDTO toResponseDTO(Organizacao organizacao);
 
     OrganizacaoBaseDTO toBaseDTO(Organizacao organizacao);

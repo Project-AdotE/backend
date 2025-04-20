@@ -1,5 +1,6 @@
 package com.adote.api.infra.persistence.repositories;
 
+import com.adote.api.core.entities.Organizacao;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,6 @@ public interface OrganizacaoRepository extends JpaRepository<OrganizacaoEntity, 
     Page<OrganizacaoEntity> findAll(Pageable pageable);
 
     Optional<OrganizacaoEntity> findByCnpj(String cnpj);
+
+    Optional<OrganizacaoEntity> findByEmail(String email);
 }

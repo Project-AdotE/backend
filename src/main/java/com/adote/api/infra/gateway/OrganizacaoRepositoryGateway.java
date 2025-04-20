@@ -52,7 +52,9 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
 
         OrganizacaoEntity organizacaoEntity = organizacaoMapper.toEntity(organizacao);
         organizacaoEntity.setSenha(passwordEncoder.encode(organizacaoEntity.getSenha()));
-        return organizacaoMapper.toOrganizacao(organizacaoRepository.save(organizacaoEntity));
+        Organizacao organizacaoFinal = organizacaoMapper.toOrganizacao(organizacaoRepository.save(organizacaoEntity));
+        System.out.println(organizacaoFinal);
+        return organizacaoFinal;
     }
 
     @Override
