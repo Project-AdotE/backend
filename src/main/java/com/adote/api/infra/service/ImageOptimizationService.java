@@ -1,4 +1,4 @@
-package com.adote.api.infra.config.aws.s3;
+package com.adote.api.infra.service;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.stereotype.Service;

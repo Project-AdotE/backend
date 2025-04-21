@@ -20,10 +20,10 @@ public class MailConfig {
     public JavaMailSender javaMailSender() {
         JsonNode secret = awsSecretManagerService.getSecret("Email-app-password");
 
-        String host = getJsonValue(secret, "host");
-        int port = Integer.parseInt(getJsonValue(secret, "port"));
-        String username = getJsonValue(secret, "username");
-        String password = getJsonValue(secret, "password");
+        String host = getJsonValue(secret, "ses-smtp-host");
+        int port = Integer.parseInt(getJsonValue(secret, "ses-smtp-port"));
+        String username = getJsonValue(secret, "ses-smtp-username");
+        String password = getJsonValue(secret, "ses-smtp-password");
         String auth = getJsonValue(secret, "auth");
         String starttls = getJsonValue(secret, "starttls");
 

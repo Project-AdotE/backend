@@ -58,7 +58,7 @@ public class PasswordTokenRepositoryGateway implements PasswordTokenGateway {
         templateModel.put("username", org.nome());
         templateModel.put("token", token);
 
-        emailService.sendHtmlEmail("felipe.losadawai0@gmail.com", "Reset Password Token", templateModel);
+        emailService.sendHtmlEmail("felipewai.dev@gmail.com", "Reset Password Token", templateModel);
     }
 
     @Override

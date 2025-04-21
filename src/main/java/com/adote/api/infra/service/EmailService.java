@@ -26,6 +26,7 @@ public class EmailService {
             context.setVariables(templateModel);
             String htmlContent = templateEngine.process("resetPasswordEmail", context);
 
+            helper.setFrom("felipe.losadawai0@gmail.com");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
