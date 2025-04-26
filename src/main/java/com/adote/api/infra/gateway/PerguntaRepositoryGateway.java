@@ -21,7 +21,7 @@ public class PerguntaRepositoryGateway implements PerguntaGateway {
 
     @Override
     public List<Pergunta> getAllPerguntas() {
-        List<PerguntaEntity> entityList = perguntaRepository.findAll();
+        List<PerguntaEntity> entityList = perguntaRepository.findAllByOrderByPosicaoAsc();
         return entityList.stream()
                 .map(perguntaMapper::toDomain)
                 .collect(Collectors.toList());
