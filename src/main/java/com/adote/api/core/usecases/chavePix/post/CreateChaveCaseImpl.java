@@ -6,14 +6,14 @@ import com.adote.api.infra.dtos.chavePix.request.ChavePixRequestDTO;
 
 public class CreateChaveCaseImpl implements CreateChaveCase {
 
-    private final ChavePixGateway gateway;
+    private final ChavePixGateway chavePixGateway;
 
     public CreateChaveCaseImpl(final ChavePixGateway gateway) {
-        this.gateway = gateway;
+        this.chavePixGateway = gateway;
     }
 
     @Override
     public ChavePix execute(ChavePixRequestDTO chavePixRequestDTO) {
-        return gateway.createChavePix(chavePixRequestDTO);
+        return chavePixGateway.createChavePix(chavePixRequestDTO);
     }
 }

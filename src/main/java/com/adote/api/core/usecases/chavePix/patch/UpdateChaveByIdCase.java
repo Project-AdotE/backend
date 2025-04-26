@@ -5,6 +5,6 @@ import com.adote.api.infra.dtos.chavePix.update.ChavePixUpdateDTO;
 
 public interface UpdateChaveByIdCase {
 
-    ChavePix execute(Long id, ChavePixUpdateDTO updateDTO);
+    ChavePix execute(Long id, Long tokenOrgId, ChavePixUpdateDTO updateDTO);
 
 }

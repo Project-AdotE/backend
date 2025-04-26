@@ -13,7 +13,7 @@ public class UpdateChaveByIdCaseImpl implements UpdateChaveByIdCase {
     }
 
     @Override
-    public ChavePix execute(Long id, ChavePixUpdateDTO updateDTO) {
-        return gateway.updateChaveById(id, updateDTO);
+    public ChavePix execute(Long id, Long tokenOrgId, ChavePixUpdateDTO updateDTO) {
+        return gateway.updateChaveById(id, tokenOrgId, updateDTO);
     }
 }

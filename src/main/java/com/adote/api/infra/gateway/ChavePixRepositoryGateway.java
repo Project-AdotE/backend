@@ -2,6 +2,8 @@ package com.adote.api.infra.gateway;
 
 import com.adote.api.core.entities.ChavePix;
 import com.adote.api.core.entities.Organizacao;
+import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
+import com.adote.api.core.exceptions.chavePix.ChaveAlreadyTakenException;
 import com.adote.api.core.gateway.ChavePixGateway;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.chavePix.request.ChavePixRequestDTO;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -32,7 +35,7 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
 
     @Override
     public ChavePix createChavePix(ChavePixRequestDTO chavePixRequestDTO) {
-        Organizacao organizacao = getOrganizacaoById.execute(chavePixRequestDTO.organizacao_id());
+        Organizacao organizacao = getOrganizacaoById.execute(chavePixRequestDTO.organizacaoId());
 
         ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePixRequestDTO);
         chavePixEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
@@ -41,33 +44,20 @@ public class ChavePixRepositoryGateway implements ChavePixGateway {
     }
 
     @Override
-    public List<ChavePix> getAllChaves() {
-        List<ChavePixEntity> chavePixEntities = chavePixRepository.findAll();
-        return chavePixEntities.stream()
-                .map(chavePixMapper::toChavePix)
-                .toList();
-    }
-
-    @Override
-    public List<ChavePix> getChavePixByOrgId(Long orgId) {
-        getOrganizacaoById.execute(orgId);
-        List<ChavePixEntity> chavePixEntityList = chavePixRepository.findAllByOrganizacao_Id(orgId);
-        return chavePixEntityList.stream()
-                .map(chavePixMapper::toChavePix)
-                .toList();
-    }
-
-    @Override
-    public ChavePix updateChaveById(Long id, ChavePixUpdateDTO updateDTO) {
+    public ChavePix updateChaveById(Long id, Long tokenOrgId, ChavePixUpdateDTO updateDTO) {
         ChavePixEntity entity = chavePixRepository.findById(id);
-        if (updateDTO.tipo() != null) {
-            entity.setTipo(updateDTO.tipo());
+        if(!Objects.equals(tokenOrgId, entity.getOrganizacao().getId())) {
+            throw new UnauthorizedAccessException("Você não tem permissão para atualizar a chave desta organização");
         }
-        if (updateDTO.chave() != null) {
-            if (chavePixRepository.existsByChaveAndIdNot(updateDTO.chave(), id)) {
-                return null;
+
+        if(updateDTO.tipo().isPresent()){
+            entity.setTipo(updateDTO.tipo().get());
+        }
+        if(updateDTO.chave().isPresent()){
+            if (chavePixRepository.existsByChaveAndIdNot(updateDTO.chave().get(), id)) {
+                throw new ChaveAlreadyTakenException("Chave já escolhida");
             }
-            entity.setChave(updateDTO.chave());
+            entity.setChave(updateDTO.chave().get());
         }
 
         ChavePixEntity savedEntity = chavePixRepository.save(entity);

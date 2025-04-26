@@ -29,7 +29,7 @@ public class SecurityFilter extends OncePerRequestFilter {
              Optional<JWTUserData> optionalJWTUserData = tokenService.verifyToken(token);
             if(optionalJWTUserData.isPresent()) {
                 JWTUserData jwtUserData = optionalJWTUserData.get();
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jwtUserData, null, null);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jwtUserData, token, null);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
                 return;

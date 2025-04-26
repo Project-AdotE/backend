@@ -20,7 +20,7 @@ public class ChavePixEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo", nullable = false)
+    @Column(name = "tipo", nullable = false, length = 20)
     private TipoChaveEnum tipo;
 
     @Column(unique = true, nullable = false)

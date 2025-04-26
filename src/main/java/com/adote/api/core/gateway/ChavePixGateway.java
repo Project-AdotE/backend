@@ -10,10 +10,6 @@ public interface ChavePixGateway {
 
     ChavePix createChavePix(ChavePixRequestDTO chavePixRequestDTO);
 
-    List<ChavePix> getAllChaves();
-
-    List<ChavePix> getChavePixByOrgId(Long orgId);
-
-    ChavePix updateChaveById(Long id, ChavePixUpdateDTO updateDTO);
+    ChavePix updateChaveById(Long id, Long tokenOrgId, ChavePixUpdateDTO updateDTO);
 
 }

@@ -7,6 +7,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -28,6 +30,20 @@ public class TokenService {
                 .withExpiresAt(Instant.now().plusSeconds(60 * 60 * 24))
                 .withIssuer("Adote API")
                 .sign(algorithm);
+    }
+
+    public Long getOrganizacaoId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Usuário não autenticado");
+        }
+
+        String token = (String) authentication.getCredentials();
+
+        return this.verifyToken(token)
+                .map(JWTUserData::id)
+                .orElseThrow(() -> new RuntimeException("Token inválido ou expirado"));
     }
 
     public Optional<JWTUserData> verifyToken(String token) {

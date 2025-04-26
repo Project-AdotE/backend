@@ -6,6 +6,7 @@ import com.adote.api.infra.dtos.chavePix.response.ChavePixResponseDTO;
 import com.adote.api.infra.dtos.chavePix.response.ChavePixSimplificadaDTO;
 import com.adote.api.infra.persistence.entities.ChavePixEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ChavePixMapper {
@@ -17,5 +18,4 @@ public interface ChavePixMapper {
     ChavePixResponseDTO toResponseDTO(ChavePix chavePix);
 
     ChavePixSimplificadaDTO toSimplificadaDTO(ChavePix chavePix);
-
 }

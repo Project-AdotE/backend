@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class AuthService implements UserDetailsService {
 
     private final OrganizacaoRepository organizacaoRepository;
-    private OrganizacaoMapper organizacaoMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
