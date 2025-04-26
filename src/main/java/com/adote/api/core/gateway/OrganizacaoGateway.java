@@ -15,6 +15,8 @@ public interface OrganizacaoGateway {
 
     Optional<Organizacao> getOrganizacaoByCnpj(String cnpj);
 
+    Optional<Organizacao> getOrganizacaoByEmail(String email);
+
     void deleteOrganizacaoById(Long id);
 
     Page<Organizacao> getAllorganizacoes(OrganizacaoFilter filter, Pageable pageable);

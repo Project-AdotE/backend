@@ -1,16 +1,13 @@
 package com.adote.api.infra.gateway;
 
-import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.exceptions.oraganizacao.CnpjAlreadyExistsException;
+import com.adote.api.core.exceptions.oraganizacao.EmailAlreadyExistsException;
 import com.adote.api.core.exceptions.oraganizacao.OrganizacaoNotFoundException;
 import com.adote.api.core.gateway.OrganizacaoGateway;
-import com.adote.api.infra.filters.animal.AnimalFilter;
-import com.adote.api.infra.filters.animal.AnimalSpecification;
 import com.adote.api.infra.filters.organizacao.OrganizacaoFilter;
 import com.adote.api.infra.filters.organizacao.OrganizacaoSpecification;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
-import com.adote.api.infra.persistence.entities.AnimalEntity;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
 import com.adote.api.infra.persistence.repositories.OrganizacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -45,15 +41,23 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
     }
 
     @Override
+    public Optional<Organizacao> getOrganizacaoByEmail(String email) {
+        Optional<OrganizacaoEntity> organizacaoEntity = organizacaoRepository.findByEmail(email);
+        return organizacaoEntity.map(organizacaoMapper::toOrganizacao);
+    }
+
+    @Override
     public Organizacao createOrganizacao(Organizacao organizacao) {
         if(getOrganizacaoByCnpj(organizacao.cnpj()).isPresent()) {
             throw new CnpjAlreadyExistsException(organizacao.cnpj());
+        }
+        if(getOrganizacaoByEmail(organizacao.email()).isPresent()) {
+            throw new EmailAlreadyExistsException(organizacao.email());
         }
 
         OrganizacaoEntity organizacaoEntity = organizacaoMapper.toEntity(organizacao);
         organizacaoEntity.setSenha(passwordEncoder.encode(organizacaoEntity.getSenha()));
         Organizacao organizacaoFinal = organizacaoMapper.toOrganizacao(organizacaoRepository.save(organizacaoEntity));
-        System.out.println(organizacaoFinal);
         return organizacaoFinal;
     }
 

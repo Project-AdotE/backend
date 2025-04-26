@@ -7,6 +7,7 @@ import com.adote.api.infra.config.auth.TokenService;
 import com.adote.api.infra.dtos.organizacao.request.LoginRequestDTO;
 import com.adote.api.infra.dtos.organizacao.request.OrganizacaoRequestDTO;
 import com.adote.api.infra.dtos.organizacao.response.LoginResponseDTO;
+import com.adote.api.infra.dtos.organizacao.response.OrganizacaoBaseDTO;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoResponseDTO;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
 import com.adote.api.infra.persistence.entities.OrganizacaoEntity;
@@ -57,9 +58,9 @@ public class AuthController {
     @Operation(summary = "Registro", description = "Registro de usuários na plataforma")
     @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso")
     @PostMapping("/register")
-    public ResponseEntity<OrganizacaoResponseDTO> createOrganizacao(@RequestBody @Valid OrganizacaoRequestDTO requestDTO) {
+    public ResponseEntity<OrganizacaoBaseDTO> createOrganizacao(@RequestBody @Valid OrganizacaoRequestDTO requestDTO) {
         Organizacao newOrganizacao = createOrganizacaoCase.execute(organizacaoMapper.toOrganizacao(requestDTO));
-        return ResponseEntity.ok().body(organizacaoMapper.toResponseDTO(newOrganizacao));
+        return ResponseEntity.ok().body(organizacaoMapper.toBaseDTO(newOrganizacao));
     }
 
 }
