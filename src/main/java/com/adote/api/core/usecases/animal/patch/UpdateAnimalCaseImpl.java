@@ -2,6 +2,7 @@ package com.adote.api.core.usecases.animal.patch;
 
 import com.adote.api.core.entities.Animal;
 import com.adote.api.core.gateway.AnimalGateway;
+import com.adote.api.infra.dtos.animal.request.AnimalPatchDTO;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,7 @@ public class UpdateAnimalCaseImpl implements UpdateAnimalCase {
     }
 
     @Override
-    public Animal execute(Long id, AnimalRequestDTO animalRequestDTO, List<MultipartFile> novasFotos, List<String> fotosParaRemover) {
-        return animalGateway.updateAnimal(id, animalRequestDTO, novasFotos, fotosParaRemover);
+    public Animal execute(Long id, AnimalPatchDTO animalRequestDTO, List<MultipartFile> novasFotos, List<String> fotosParaRemover, Long tokenOrgId) {
+        return animalGateway.updateAnimal(id, animalRequestDTO, novasFotos, fotosParaRemover, tokenOrgId);
     }
 }

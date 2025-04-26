@@ -11,7 +11,7 @@ public class DeleteAnimalByIdCaseImpl implements DeleteAnimalByIdCase {
     }
 
     @Override
-    public void execute(Long id) {
-        animalGateway.deleteAnimalById(id);
+    public void execute(Long id, Long tokenOrgId) {
+        animalGateway.deleteAnimalById(id, tokenOrgId);
     }
 }

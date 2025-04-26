@@ -5,6 +5,7 @@ import com.adote.api.core.Enums.PorteEnum;
 import com.adote.api.core.Enums.SexoEnum;
 import com.adote.api.core.Enums.TipoAnimalEnum;
 import com.adote.api.core.entities.Animal;
+import com.adote.api.infra.dtos.animal.request.AnimalPatchDTO;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
 import com.adote.api.infra.filters.animal.AnimalFilter;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,8 @@ public interface AnimalGateway {
 
     Optional<Animal> getAnimalById(Long id);
 
-    Animal updateAnimal(Long id, AnimalRequestDTO animalRequestDTO, List<MultipartFile> novasFotos, List<String> fotosParaRemover);
+    Animal updateAnimal(Long id, AnimalPatchDTO animalRequestDTO, List<MultipartFile> novasFotos, List<String> fotosParaRemover, Long tokenOrgId);
 
-    void deleteAnimalById(Long id);
+    void deleteAnimalById(Long id, Long tokenOrgId);
 
 }

@@ -4,10 +4,12 @@ import com.adote.api.core.entities.Animal;
 import com.adote.api.core.entities.FotoAnimal;
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.exceptions.animal.AnimalNotFoundException;
+import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
 import com.adote.api.core.gateway.AnimalGateway;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
+import com.adote.api.infra.dtos.animal.request.AnimalPatchDTO;
 import com.adote.api.infra.service.ImageOptimizationService;
 import com.adote.api.infra.config.aws.s3.S3StorageService;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
@@ -82,36 +84,28 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     }
 
     @Override
-    public Animal updateAnimal(Long id, AnimalRequestDTO animalRequestDTO,
-                               List<MultipartFile> novasFotos, List<String> fotosParaRemover) {
+    public Animal updateAnimal(Long id, AnimalPatchDTO animalRequestDTO,
+                               List<MultipartFile> novasFotos, List<String> fotosParaRemover, Long tokenOrgId) {
 
-        Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
-        if (animalOptional.isEmpty()) {
-            throw new AnimalNotFoundException(id.toString());
+        AnimalEntity animalEntity = animalRepository.findById(id)
+                .orElseThrow(() -> new AnimalNotFoundException(id.toString()));
+
+        if (!tokenOrgId.equals(animalEntity.getOrganizacao().getId())) {
+            throw new UnauthorizedAccessException("Vocês não tem permissão para atualizar o animal");
         }
 
-        AnimalEntity animalEntity = animalOptional.get();
-        if (animalRequestDTO != null) {
-            if (animalRequestDTO.nome() != null) animalEntity.setNome(animalRequestDTO.nome());
-            if (animalRequestDTO.descricao() != null) animalEntity.setDescricao(animalRequestDTO.descricao());
+        animalRequestDTO.nome().ifPresent(animalEntity::setNome);
+        animalRequestDTO.descricao().ifPresent(animalEntity::setDescricao);
+        animalRequestDTO.tipo().ifPresent(animalEntity::setTipo);
+        animalRequestDTO.sexo().ifPresent(animalEntity::setSexo);
+        animalRequestDTO.porte().ifPresent(animalEntity::setPorte);
+        animalRequestDTO.idade().ifPresent(animalEntity::setIdade);
+        animalRequestDTO.vacinado().ifPresent(animalEntity::setVacinado);
+        animalRequestDTO.castrado().ifPresent(animalEntity::setCastrado);
+        animalRequestDTO.vermifugado().ifPresent(animalEntity::setVermifugado);
+        animalRequestDTO.srd().ifPresent(animalEntity::setSrd);
 
-            if (animalRequestDTO.tipo() != null) animalEntity.setTipo(animalRequestDTO.tipo());
-            if (animalRequestDTO.sexo() != null) animalEntity.setSexo(animalRequestDTO.sexo());
-            if (animalRequestDTO.porte() != null) animalEntity.setPorte(animalRequestDTO.porte());
-            if (animalRequestDTO.idade() != null) animalEntity.setIdade(animalRequestDTO.idade());
-
-            if (animalRequestDTO.vacinado() != null) animalEntity.setVacinado(animalRequestDTO.vacinado());
-            if (animalRequestDTO.castrado() != null) animalEntity.setCastrado(animalRequestDTO.castrado());
-            if (animalRequestDTO.vermifugado() != null) animalEntity.setVermifugado(animalRequestDTO.vermifugado());
-            if (animalRequestDTO.srd() != null) animalEntity.setSrd(animalRequestDTO.srd());
-
-            if (animalRequestDTO.organizacao_id() != null) {
-                Organizacao organizacao = getOrganizacaoById.execute(animalRequestDTO.organizacao_id());
-                animalEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
-            }
-
-            animalRepository.save(animalEntity);
-        }
+        animalRepository.save(animalEntity);
 
         if (fotosParaRemover != null && !fotosParaRemover.isEmpty()) {
             for (String fotoUrl : fotosParaRemover) {
@@ -157,14 +151,17 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     @Transactional
     @Override
-    public void deleteAnimalById(Long id) {
+    public void deleteAnimalById(Long id, Long tokenOrgId) {
         Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
-
         if(animalOptional.isEmpty()){
             throw new AnimalNotFoundException(id.toString());
         }
 
         AnimalEntity animalEntity = animalOptional.get();
+
+        if(!tokenOrgId.equals(animalEntity.getOrganizacao().getId())) {
+            throw new UnauthorizedAccessException("Você não pode deletar esse animal");
+        }
 
         List<FotoAnimalEntity> fotosDoAnimal = fotoAnimalRepository.getFotoAnimalEntitiesByAnimal_Id(id);
 

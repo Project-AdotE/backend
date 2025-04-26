@@ -1,6 +1,7 @@
 package com.adote.api.infra.exception.auth;
 
 import com.adote.api.core.exceptions.auth.LoginInvalidoException;
+import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,15 @@ public class AuthExceptionHandler {
 
     @ExceptionHandler(LoginInvalidoException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(LoginInvalidoException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(UnauthorizedAccessException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 ex.getMessage()

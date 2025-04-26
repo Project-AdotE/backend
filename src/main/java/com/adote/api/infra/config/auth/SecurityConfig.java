@@ -34,27 +34,29 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-
-                        .requestMatchers(HttpMethod.POST, "/reset-password/request").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/reset-password/verify").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/reset-password/new-password").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/api/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger/**").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/animal/**").permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/organizacao").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/organizacao/**").permitAll()
-
-                        .requestMatchers(HttpMethod.POST, "/qrcodepix").permitAll()
-
+                        .requestMatchers(publicEndpoints()).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    private static String[] publicEndpoints() {
+        return new String[]{
+                "/auth/register",
+                "/auth/login",
+                "/reset-password/request",
+                "/reset-password/verify",
+                "/reset-password/new-password",
+
+                "/api/api-docs/**",
+                "/swagger/**",
+
+                "/animal/**",
+                "/organizacao/**",
+
+                "/qrcodepix"
+        };
     }
 
     @Bean
