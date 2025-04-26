@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface PasswordTokenRepository extends JpaRepository<PasswordTokenEntity, Long> {
     Optional<PasswordTokenEntity> findByEmailAndToken(String email, String token);
 
-    int deleteByExpirationTimeBefore(LocalDateTime expirationTimeBefore);
+    Integer deleteByExpirationTimeBefore(LocalDateTime expirationTimeBefore);
 }

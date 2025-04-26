@@ -14,6 +14,7 @@ import com.adote.api.infra.persistence.entities.PasswordTokenEntity;
 import com.adote.api.infra.persistence.repositories.OrganizacaoRepository;
 import com.adote.api.infra.persistence.repositories.PasswordTokenRepository;
 import com.adote.api.infra.service.EmailService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -107,9 +108,10 @@ public class PasswordTokenRepositoryGateway implements PasswordTokenGateway {
     }
 
     @Scheduled(fixedRate = 86400000)
+    @Transactional
     public void cleanExpiredTokens() {
         LocalDateTime now = LocalDateTime.now();
-        int deletedTokens = passwordTokenRepository.deleteByExpirationTimeBefore(now);
+        Integer deletedTokens = passwordTokenRepository.deleteByExpirationTimeBefore(now);
         System.out.println("Tokens expirados removidos: " + deletedTokens);
     }
 }
