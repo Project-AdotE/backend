@@ -1,0 +1,1 @@
+ALTER TYPE tipo_chave_pix RENAME VALUE 'ALEATORIA' TO 'OUTRO';

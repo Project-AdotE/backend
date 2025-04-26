@@ -1,5 +1,6 @@
 package com.adote.api.infra.persistence.entities;
 
+import com.adote.api.core.Enums.TipoChaveEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,9 @@ public class ChavePixEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo", nullable = false)
+    private TipoChaveEnum tipo;
 
     @Column(unique = true, nullable = false)
     private String chave;

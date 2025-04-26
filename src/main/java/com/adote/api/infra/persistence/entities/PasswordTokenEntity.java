@@ -21,7 +21,7 @@ public class PasswordTokenEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, length = 6, unique = true)
     private String token;
 
     @Column(nullable = false)

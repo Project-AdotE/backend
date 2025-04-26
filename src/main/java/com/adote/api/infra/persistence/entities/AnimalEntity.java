@@ -60,10 +60,13 @@ public class AnimalEntity {
     private String descricao;
 
     @ManyToOne
-    @JoinColumn(name = "organizacao_id", nullable = false)
+    @JoinColumn(name = "organizacao_id",
+                nullable = false)
     private OrganizacaoEntity organizacao;
 
-    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "animal",
+                cascade = CascadeType.ALL,
+                orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FotoAnimalEntity> fotos;
 
     @CreationTimestamp

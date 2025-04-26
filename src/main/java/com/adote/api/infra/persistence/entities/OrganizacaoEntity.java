@@ -36,16 +36,22 @@ public class OrganizacaoEntity implements UserDetails {
     @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     private EnderecoOrganizacaoEntity endereco;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "organizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "organizacao",
+                cascade = CascadeType.ALL,
+                orphanRemoval = true,
+                fetch = FetchType.LAZY)
     private List<AnimalEntity> animais;
 
-    @OneToMany(mappedBy = "organizacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "organizacao",
+                cascade = CascadeType.ALL,
+                orphanRemoval = true,
+                fetch = FetchType.LAZY)
     private List<ChavePixEntity> chavesPix;
 
 
