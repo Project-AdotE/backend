@@ -55,7 +55,9 @@ public class SecurityConfig {
                 "/animal/**",
                 "/organizacao/**",
 
-                "/qrcodepix"
+                "/qrcodepix",
+
+                "/pergunta"
         };
     }
 
