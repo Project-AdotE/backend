@@ -4,6 +4,7 @@ import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.usecases.organizacao.delete.DeleteOrganizacaoById;
 import com.adote.api.core.usecases.organizacao.get.GetAllOrganizacoesCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
+import com.adote.api.infra.config.auth.TokenService;
 import com.adote.api.infra.dtos.organizacao.response.OrganizacaoBaseDTO;
 import com.adote.api.infra.dtos.page.response.PageResponseDTO;
 import com.adote.api.infra.filters.organizacao.OrganizacaoFilter;
@@ -28,6 +29,8 @@ public class OrganizacaoController {
     private final GetOrganizacaoById getOrganizacaoById;
     private final GetAllOrganizacoesCase getAllOrganizacoesCase;
     private final DeleteOrganizacaoById deleteOrganizacaoById;
+
+    private final TokenService tokenService;
 
     private final OrganizacaoMapper organizacaoMapper;
 
@@ -67,6 +70,12 @@ public class OrganizacaoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrganizacao(@PathVariable Long id) {
+        Long tokenOrgId = tokenService.getOrganizacaoId();
+
+        if (!tokenOrgId.equals(id)) {
+            throw new RuntimeException("Você não pode excluir a organização.");
+        }
+
         deleteOrganizacaoById.execute(id);
         return ResponseEntity.noContent().build();
     }

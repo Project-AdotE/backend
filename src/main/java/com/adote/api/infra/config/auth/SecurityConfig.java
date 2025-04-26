@@ -49,8 +49,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/organizacao").permitAll()
                         .requestMatchers(HttpMethod.GET, "/organizacao/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/chavepix/organizacao/**").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/qrcodepix").permitAll()
 
                         .anyRequest().authenticated()
