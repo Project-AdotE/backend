@@ -50,6 +50,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/formulario").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/pergunta").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
