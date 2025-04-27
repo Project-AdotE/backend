@@ -1,0 +1,2 @@
+ALTER TABLE formularios
+    ADD COLUMN idade INTEGER NOT NULL;

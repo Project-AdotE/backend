@@ -10,6 +10,7 @@ public record Formulario(
         Organizacao organizacao,
         String nomeAdotante,
         String email,
+        Long idade,
         String telefone,
         String cpf,
         StatusFormularioEnum status,

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Redefinição de Senha</title>
+    <title>Formulário de Adoção Aprovado</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
         }
 
         .container {
-            max-width: 500px;
+            max-width: 600px;
             margin: 20px auto;
             background: white;
             border-radius: 10px;
@@ -40,6 +40,7 @@
 
         .content {
             padding: 30px;
+            text-align: left;
         }
 
         .header {
@@ -53,33 +54,28 @@
             margin-bottom: 10px;
         }
 
-        .username {
-            font-size: 24px;
-            font-weight: bold;
-            color: #d16c00;
-            margin: 15px 0;
-        }
-
-        .text {
-            font-size: 18px;
-            margin: 15px 0;
-        }
-
-        .code-container {
+        .pet-info {
             background-color: #f9f9f9;
             border-radius: 5px;
             padding: 15px;
-            margin: 25px 0;
+            margin: 20px 0;
             border-left: 4px solid #d16c00;
         }
 
-        .code {
-            font-size: 32px;
+        .next-steps {
+            margin: 25px 0;
+        }
+
+        .name {
+            font-size: 22px;
             font-weight: bold;
             color: #d16c00;
             margin: 5px 0;
-            text-align: center;
-            display: block;
+        }
+
+        .highlight {
+            color: #d16c00;
+            font-weight: bold;
         }
 
         .footer {
@@ -101,17 +97,28 @@
 
     <div class="content">
         <div class="header">
-            <h1>Redefinição de Senha</h1>
+            <h1>Parabéns!</h1>
+            <p class="name" th:text="${nomeAdotante}">Adotante</p>
+            <p>Seu formulário de adoção foi <span class="highlight">APROVADO</span>!</p>
         </div>
 
-        <p class="username" th:text="${username}">username</p>
-        <p class="text">Recebemos sua solicitação para redefinir sua senha. Use o código abaixo para completar o processo:</p>
+        <p>Estamos felizes em informar que seu formulário de adoção para o pet <strong th:text="${nomeAnimal}">Nome do Animal</strong> foi aprovado pela organização.</p>
 
-        <div class="code-container">
-            <p class="code" th:text="${token}">token</p>
+        <div class="pet-info">
+            <h3>Informações do Pet:</h3>
+            <p><strong>Nome:</strong> <span th:text="${nomeAnimal}">Nome do Animal</span></p>
+            <p><strong>Tipo:</strong> <span th:text="${tipoAnimal}">Tipo do Animal</span></p>
+            <p><strong>Organização:</strong> <span th:text="${nomeOrganizacao}">Nome da Organização</span></p>
         </div>
 
-        <p class="text">Este código expirará em 10 minutos. Caso não tenha solicitado trocar sua senha, por favor ignore este email.</p>
+        <div class="next-steps">
+            <h3>Próximos Passos:</h3>
+            <p>A organização <span class="highlight" th:text="${nomeOrganizacao}">Nome da Organização</span> entrará em contato com você em breve para os próximos passos.</p>
+            <p>Você também pode entrar em contato diretamente com eles através do e-mail: <a th:href="'mailto:' + ${emailOrganizacao}" th:text="${emailOrganizacao}" style="color: #d16c00;">email@organizacao.com</a></p>
+            <p>Telefone: <span th:text="${telefoneOrganizacao}">(00) 0000-0000</span></p>
+        </div>
+
+        <p>Agradecemos por escolher a adoção e dar um novo lar para um pet que precisa de amor e cuidados!</p>
 
         <div class="footer">
             <p>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>

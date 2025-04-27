@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class PerguntasUseCasesConfig {
+public class PerguntaUseCasesConfig {
 
     private final PerguntaRepositoryGateway perguntaRepositoryGateway;
 
