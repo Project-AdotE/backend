@@ -63,7 +63,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
         AnimalEntity savedAnimal = animalRepository.save(animalEntity);
 
-        if(fotos != null) {
+        if(fotos != null && (!fotos.isEmpty() && fotos.size() < 4)) {
             List<FotoAnimal> fotoAnimalList = fotos.stream().map(foto -> {
 
                 try{
@@ -120,7 +120,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
             }
         }
 
-        if (novasFotos != null && !novasFotos.isEmpty()) {
+        if (novasFotos != null && !novasFotos.isEmpty() && novasFotos.size() < 4) {
             List<FotoAnimal> fotoAnimalList = novasFotos.stream().map(foto -> {
                 String url = s3StorageService.uploadFile(foto, "animais");
                 return new FotoAnimal(null, url, animalMapper.toAnimal(animalEntity));
