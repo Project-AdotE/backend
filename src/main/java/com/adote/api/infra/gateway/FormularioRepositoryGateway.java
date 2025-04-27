@@ -80,7 +80,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
             List<RespostasEntity> respostasEntityList = formularioRequestDTO.respostas().stream()
                     .map(respostaRequestDTO -> RespostasEntity.builder()
                             .formulario(saved)
-                            .pergunta(PerguntaEntity.builder().id(respostaRequestDTO.idPergunta() + 2).build())
+                            .pergunta(PerguntaEntity.builder().id(respostaRequestDTO.idPergunta()).build())
                             .resposta(respostaRequestDTO.resposta())
                             .build()
                     ).toList();
