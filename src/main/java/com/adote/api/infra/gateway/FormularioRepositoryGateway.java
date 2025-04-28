@@ -25,11 +25,14 @@ import com.adote.api.infra.persistence.entities.RespostasEntity;
 import com.adote.api.infra.persistence.repositories.FormularioRepository;
 import com.adote.api.infra.persistence.repositories.RespostasRepository;
 import com.adote.api.infra.service.EmailService;
+import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,12 +55,11 @@ public class FormularioRepositoryGateway implements FormularioGateway {
 
     @Override
     public void criarFormulario(FormularioRequestDTO formularioRequestDTO) {
-
         Animal animal = getAnimalByIdCase.execute(formularioRequestDTO.idAnimal());
         Organizacao organizacao = getOrganizacaoById.execute(formularioRequestDTO.idOrganizacao());
 
         if(!formularioRepository.findByEmailAndAnimal_Id(formularioRequestDTO.email(), formularioRequestDTO.idAnimal()).isEmpty()
-            || !formularioRepository.findByCpfAndAnimal_Id(formularioRequestDTO.cpf(), formularioRequestDTO.idAnimal()).isEmpty()){
+                || !formularioRepository.findByCpfAndAnimal_Id(formularioRequestDTO.cpf(), formularioRequestDTO.idAnimal()).isEmpty()){
             throw new FormularioAlreadyExistsException("Email ou CPF já enviou formulario para este animal");
         }
 
@@ -86,6 +88,51 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                     ).toList();
 
             respostasRepository.saveAll(respostasEntityList);
+        }
+
+        Map<String, Object> orgTemplateModel = new HashMap<>();
+        orgTemplateModel.put("nomeOrganizacao", organizacao.nome());
+        orgTemplateModel.put("nomeAnimal", animal.nome());
+        orgTemplateModel.put("tipoAnimal", animal.tipo().toString());
+        orgTemplateModel.put("nomeAdotante", formularioRequestDTO.nomeAdotante());
+        orgTemplateModel.put("emailAdotante", formularioRequestDTO.email());
+        orgTemplateModel.put("telefoneAdotante", formularioRequestDTO.telefone());
+        orgTemplateModel.put("idadeAdotante", formularioRequestDTO.idade());
+        orgTemplateModel.put("dataEnvio", saved.getDataEnvio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        orgTemplateModel.put("painelUrl", "https://seusite.com/painel/formularios/" + saved.getId());
+
+        SendEmailResult resultOrg = emailService.sendHtmlEmailWithResult(
+                organizacao.email(),
+                "Novo Formulário de Adoção Recebido",
+                "novoFormularioRecebidoEmail",
+                orgTemplateModel
+        );
+
+        if (resultOrg != null && resultOrg.getMessageId() != null) {
+            System.out.println("Email para organização enviado com sucesso: " + resultOrg.getMessageId());
+
+            Map<String, Object> adotanteTemplateModel = new HashMap<>();
+            adotanteTemplateModel.put("nomeAdotante", formularioRequestDTO.nomeAdotante());
+            adotanteTemplateModel.put("nomeAnimal", animal.nome());
+            adotanteTemplateModel.put("tipoAnimal", animal.tipo().toString());
+            adotanteTemplateModel.put("nomeOrganizacao", organizacao.nome());
+            adotanteTemplateModel.put("emailOrganizacao", organizacao.email());
+            adotanteTemplateModel.put("telefoneOrganizacao", organizacao.numero());
+
+            SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
+                    formularioRequestDTO.email(),
+                    "Seu Formulário de Adoção foi Enviado com Sucesso",
+                    "formularioEnviadoConfirmacaoEmail",
+                    adotanteTemplateModel
+            );
+
+            if (resultAdotante != null && resultAdotante.getMessageId() != null) {
+                System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
+            } else {
+                System.out.println("Falha ao enviar email para adotante");
+            }
+        } else {
+            System.out.println("Falha ao enviar email para organização");
         }
     }
 
@@ -181,12 +228,18 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         templateModel.put("emailOrganizacao", formulario.getOrganizacao().getEmail());
         templateModel.put("telefoneOrganizacao", formulario.getOrganizacao().getNumero());
 
-        emailService.sendHtmlEmail(
+        SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
                 formulario.getEmail(),
                 "Parabéns! Seu formulário de adoção foi aprovado",
                 "formularioAceitoEmail",
                 templateModel
         );
+
+        if (resultAdotante != null && resultAdotante.getMessageId() != null) {
+            System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
+        } else {
+            System.out.println("Falha ao enviar email para adotante");
+        }
     }
 
     @Override
@@ -214,11 +267,17 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         templateModel.put("telefoneOrganizacao", formulario.getOrganizacao().getNumero());
         templateModel.put("mensagemRecusa", mensagemRecusaDTO.mensagem());
 
-        emailService.sendHtmlEmail(
+        SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
                 formulario.getEmail(),
                 "Infelizmente seu formulário de adoção foi recusado",
                 "formularioRecusadoEmail",
                 templateModel
         );
+
+        if (resultAdotante != null && resultAdotante.getMessageId() != null) {
+            System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
+        } else {
+            System.out.println("Falha ao enviar email para adotante");
+        }
     }
 }

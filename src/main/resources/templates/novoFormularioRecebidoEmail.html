@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Formulário de Adoção Recebido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-height: 80px;
+            max-width: 90%;
+            display: inline-block;
+        }
+
+        .separator {
+            height: 1px;
+            background-color: #d16c00;
+            width: 100%;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: left;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #d16c00;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d16c00;
+            margin: 5px 0;
+        }
+
+        .info-box {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #d16c00;
+        }
+
+        .highlight {
+            color: #d16c00;
+            font-weight: bold;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #d16c00;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo-container">
+        <img src="https://adote-api-bucket-dev.s3.sa-east-1.amazonaws.com/logos/AdotELogo.png" alt="Logo">
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1>Novo Formulário de Adoção</h1>
+            <p class="name" th:text="${nomeOrganizacao}">Nome da Organização</p>
+        </div>
+
+        <p>Você recebeu um novo formulário de adoção para o animal <span class="highlight" th:text="${nomeAnimal}">Nome do Animal</span>!</p>
+
+        <div class="info-box">
+            <h3>Informações do Adotante:</h3>
+            <p><strong>Nome:</strong> <span th:text="${nomeAdotante}">Nome do Adotante</span></p>
+            <p><strong>Email:</strong> <span th:text="${emailAdotante}">email@adotante.com</span></p>
+            <p><strong>Telefone:</strong> <span th:text="${telefoneAdotante}">(00) 00000-0000</span></p>
+            <p><strong>Idade:</strong> <span th:text="${idadeAdotante}">00</span> anos</p>
+            <p><strong>Data de Envio:</strong> <span th:text="${dataEnvio}">00/00/0000 00:00</span></p>
+        </div>
+
+        <div class="info-box">
+            <h3>Informações do Animal:</h3>
+            <p><strong>Nome:</strong> <span th:text="${nomeAnimal}">Nome do Animal</span></p>
+            <p><strong>Tipo:</strong> <span th:text="${tipoAnimal}">Tipo do Animal</span></p>
+        </div>
+
+        <p>Acesse o painel administrativo para revisar este formulário e entrar em contato com o adotante.</p>
+
+        <div class="btn-container">
+            <a class="btn" th:href="${painelUrl}">Acessar Painel</a>
+        </div>
+
+        <p>Lembre-se de verificar cuidadosamente as informações fornecidas pelo adotante e conduzir uma entrevista adequada antes de aprovar ou recusar a adoção.</p>
+
+        <div class="footer">
+            <p>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>
+            <p>&copy; 2025 AdotE - Todos os direitos reservados.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

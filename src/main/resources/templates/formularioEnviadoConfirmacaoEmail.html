@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário de Adoção Enviado com Sucesso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-height: 80px;
+            max-width: 90%;
+            display: inline-block;
+        }
+
+        .separator {
+            height: 1px;
+            background-color: #d16c00;
+            width: 100%;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: left;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #d16c00;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d16c00;
+            margin: 5px 0;
+        }
+
+        .info-box {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #d16c00;
+        }
+
+        .steps {
+            margin: 25px 0;
+        }
+
+        .step {
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background-color: #d16c00;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .step-text {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 40px);
+        }
+
+        .highlight {
+            color: #d16c00;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo-container">
+        <img src="https://adote-api-bucket-dev.s3.sa-east-1.amazonaws.com/logos/AdotELogo.png" alt="Logo">
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1>Formulário Enviado com Sucesso!</h1>
+            <p class="name" th:text="${nomeAdotante}">Nome do Adotante</p>
+        </div>
+
+        <p>Seu formulário de adoção para o pet <span class="highlight" th:text="${nomeAnimal}">Nome do Animal</span> foi enviado com sucesso para a organização <span class="highlight" th:text="${nomeOrganizacao}">Nome da Organização</span>.</p>
+
+        <div class="info-box">
+            <h3>Informações do Pet:</h3>
+            <p><strong>Nome:</strong> <span th:text="${nomeAnimal}">Nome do Animal</span></p>
+            <p><strong>Tipo:</strong> <span th:text="${tipoAnimal}">Tipo do Animal</span></p>
+            <p><strong>Organização:</strong> <span th:text="${nomeOrganizacao}">Nome da Organização</span></p>
+        </div>
+
+        <div class="steps">
+            <h3>Próximos Passos:</h3>
+
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-text">A organização irá analisar seu formulário. Este processo pode levar alguns dias.</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-text">Caso seu formulário seja aprovado, você receberá um e-mail de confirmação com instruções para os próximos passos.</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-text">A organização poderá entrar em contato para mais informações.</span>
+            </div>
+
+        </div>
+
+        <p>Caso tenha alguma dúvida, você pode entrar em contato diretamente com a organização:</p>
+        <p>E-mail: <a th:href="'mailto:' + ${emailOrganizacao}" th:text="${emailOrganizacao}" style="color: #d16c00;">email@organizacao.com</a></p>
+        <p>Telefone: <span th:text="${telefoneOrganizacao}">(00) 0000-0000</span></p>
+
+        <p>Agradecemos por escolher a adoção! Seu interesse ajuda a dar um novo lar para um pet que precisa de amor e cuidados.</p>
+
+        <div class="footer">
+            <p>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>
+            <p>&copy; 2025 AdotE - Todos os direitos reservados.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

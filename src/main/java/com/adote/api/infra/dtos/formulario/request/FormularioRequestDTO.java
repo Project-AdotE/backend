@@ -34,7 +34,7 @@ public record FormularioRequestDTO(
         @CPF(message = "O CPF informado é inválido.")
         String cpf,
 
-        @Valid
+        @NotNull(message = "As respostas devem ser preenchidas")
         List<RespostaRequestDTO> respostas
 ) {
 }
