@@ -26,6 +26,7 @@ import com.adote.api.infra.persistence.repositories.FormularioRepository;
 import com.adote.api.infra.persistence.repositories.RespostasRepository;
 import com.adote.api.infra.service.EmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -159,6 +160,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
 
             return new FormularioResponseDTO(
                     formulario.getId(),
+                    formulario.getStatus(),
                     formulario.getNomeAdotante(),
                     formulario.getEmail(),
                     formulario.getIdade(),
@@ -243,6 +245,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
     }
 
     @Override
+    @Transactional
     public void recusarFormularioById(MensagemRecusaDTO mensagemRecusaDTO, Long id, Long tokenOrgId) {
         FormularioEntity formulario = formularioRepository.findById(id)
                 .orElseThrow(() -> new FormularioNotFoundException("Formulário não existe"));
@@ -273,6 +276,9 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                 "formularioRecusadoEmail",
                 templateModel
         );
+
+        respostasRepository.deleteByFormulario_Id(formulario.getId());
+        formularioRepository.deleteById(formulario.getId());
 
         if (resultAdotante != null && resultAdotante.getMessageId() != null) {
             System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());

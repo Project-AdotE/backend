@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface RespostasRepository extends JpaRepository<RespostasEntity, Long> {
     List<RespostasEntity> findAllByFormulario_Id(Long formularioId);
+
+    void deleteByFormulario_Id(Long formularioId);
 }
