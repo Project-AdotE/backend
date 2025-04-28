@@ -13,4 +13,6 @@ public interface FormularioRepository extends JpaRepository<FormularioEntity, Lo
     List<FormularioEntity> findAllByOrganizacao_Id(Long organizacaoId);
 
     List<FormularioEntity> findAllByAnimal_Id(Long animalId);
+
+    List<FormularioEntity> findAllByAnimal_IdOrderByDataEnvioAsc(Long animalId);
 }

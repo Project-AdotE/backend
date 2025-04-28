@@ -1,6 +1,7 @@
 package com.adote.api.infra.config.aws.secrets;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +11,10 @@ import javax.sql.DataSource;
 import java.util.Optional;
 
 @Configuration
+@RequiredArgsConstructor
 public class DataSourceConfig {
 
-    @Autowired
-    private AWSSecretManagerService awsSecretManagerService;
+    private final AWSSecretManagerService awsSecretManagerService;
 
     @Bean
     public DataSource dataSource() {

@@ -145,7 +145,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
             throw new UnauthorizedAccessException("Você não tem permissão para acessar isso");
         }
 
-        List<FormularioEntity> formularios = formularioRepository.findAllByAnimal_Id(animalId);
+        List<FormularioEntity> formularios = formularioRepository.findAllByAnimal_IdOrderByDataEnvioAsc(animalId);
 
         return formularios.stream().map(formulario -> {
             List<RespostasEntity> respostas = respostasRepository.findAllByFormulario_Id(formulario.getId());
