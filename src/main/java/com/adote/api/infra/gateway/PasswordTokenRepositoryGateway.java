@@ -14,6 +14,7 @@ import com.adote.api.infra.persistence.entities.PasswordTokenEntity;
 import com.adote.api.infra.persistence.repositories.OrganizacaoRepository;
 import com.adote.api.infra.persistence.repositories.PasswordTokenRepository;
 import com.adote.api.infra.service.EmailService;
+import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -60,6 +61,19 @@ public class PasswordTokenRepositoryGateway implements PasswordTokenGateway {
         templateModel.put("token", token);
 
         emailService.sendHtmlEmail("felipewai.dev@gmail.com", "Reset Password Token", templateModel);
+
+        SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
+                org.email(),
+                "Token para troca de senha",
+                "resetPasswordEmail",
+                templateModel
+        );
+
+        if (resultAdotante != null && resultAdotante.getMessageId() != null) {
+            System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
+        } else {
+            System.out.println("Falha ao enviar email para adotante");
+        }
     }
 
     @Override

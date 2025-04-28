@@ -13,6 +13,6 @@ public record FormularioResponseDTO(
         Long idade,
         String telefone,
         String cpf,
-        LocalDateTime dataEnvio,
+        String dataEnvio,
         List<RespostaResponseDTO> respostas
 ) {}

@@ -166,7 +166,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                     formulario.getIdade(),
                     formulario.getTelefone(),
                     formulario.getCpf(),
-                    formulario.getDataEnvio(),
+                    formulario.getDataEnvio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
                     respostasDTO
             );
         }).toList();
