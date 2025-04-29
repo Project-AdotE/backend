@@ -24,6 +24,7 @@ import com.adote.api.infra.persistence.entities.PerguntaEntity;
 import com.adote.api.infra.persistence.entities.RespostasEntity;
 import com.adote.api.infra.persistence.repositories.FormularioRepository;
 import com.adote.api.infra.persistence.repositories.RespostasRepository;
+import com.adote.api.infra.presentation.NotificationController;
 import com.adote.api.infra.service.EmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import jakarta.transaction.Transactional;
@@ -54,7 +55,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
     private final OrganizacaoMapper organizacaoMapper;
 
     private final EmailService emailService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationController notificationController;
 
     @Override
     public void criarFormulario(FormularioRequestDTO formularioRequestDTO) {
@@ -125,8 +126,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                 adotanteTemplateModel
         );
 
-        String destino = "/topic/ong/" + organizacao.id() + "/formulario";
-        simpMessagingTemplate.convertAndSend(destino, "novo_formulario");
+        notificationController.notifyOrganization(organizacao.id());
     }
 
 
