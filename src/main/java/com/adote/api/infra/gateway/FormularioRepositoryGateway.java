@@ -30,6 +30,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -53,6 +54,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
     private final OrganizacaoMapper organizacaoMapper;
 
     private final EmailService emailService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public void criarFormulario(FormularioRequestDTO formularioRequestDTO) {
@@ -122,6 +124,9 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                 "formularioEnviadoConfirmacaoEmail",
                 adotanteTemplateModel
         );
+
+        String destino = "/topic/ong/" + organizacao.id() + "/formulario";
+        simpMessagingTemplate.convertAndSend(destino, "novo_formulario");
     }
 
 
