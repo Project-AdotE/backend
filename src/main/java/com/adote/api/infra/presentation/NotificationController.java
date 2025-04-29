@@ -11,8 +11,8 @@ public class NotificationController {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    public void notifyOrganization(String organizationId, FormularioResponseDTO formulario) {
+    public void notifyOrganization(String organizationId) {
         String destination = "/topic/ong/" + organizationId + "/formulario";
-        messagingTemplate.convertAndSend(destination, formulario);
+        messagingTemplate.convertAndSend(destination, "Formulário novo recebido");
     }
 }
