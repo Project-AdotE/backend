@@ -20,7 +20,7 @@
   </a>
 </p>
 
-![screenshot](https://i.ibb.co/V0csFfN6/Home-Adot-E-home.jpg)
+![https://i.ibb.co/V0csFfN6/Home-Adot-E-home.jpg](https://i.ibb.co/RpLLN5Xj/Home-Adot-E-otimizada.jpg)
 
 ## Sobre o projeto 💻
 
