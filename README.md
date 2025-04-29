@@ -1,82 +1,108 @@
-# AdotE - Plataforma de Adoção de Animais
+<h1 align="center">
+  <a href="https://github.com/JoaoPedroOM">
+    <img src="https://i.ibb.co/PGtBT863/logo2.png" alt="AdotE" width="200">
+  </a>
+  <br>
+  AdotE
+</h1>
 
-## Objetivo do Projeto
-O objetivo do projeto é facilitar a adoção de animais, permitindo que quem deseja adotar tenha acesso a uma ampla variedade de animais disponíveis. Além disso, busca melhorar a divulgação do trabalho das ONGs, aumentando suas chances de encontrar lares para os animais.
+<h4 align="center">Conectando pets a lares cheios de amor.</h4>
 
-## Funcionalidades Principais
-- Listagem de animais disponíveis para adoção com filtros personalizados
-- Página dedicada para cada ONG cadastrada
-- Autenticação e autorização de usuários com JWT
-- Upload e armazenamento de imagens na AWS S3
-- Segurança reforçada com Spring Security e AWS Security Manager
+<p align="center">
+  <a href="https://github.com/JoaoPedroOM/AdotE-frontend">
+    <img src="https://img.shields.io/github/repo-size/JoaoPedroOM/AdotE-frontend">
+  </a>
+<a href="https://github.com/JoaoPedroOM/AdotE-frontend">
+  <img src="https://img.shields.io/github/commit-activity/t/JoaoPedroOM/AdotE-frontend">
+</a>
+  <a href="https://github.com/JoaoPedroOM/AdotE-frontend">
+    <img src="https://img.shields.io/github/created-at/JoaoPedroOM/AdotE-frontend">
+  </a>
+</p>
 
-## Tecnologias Utilizadas
-### Backend
-- **Java + Spring Boot**
-- **Flyway** (migração de banco de dados)
-- **Spring Security + JWT** (autenticação e autorização)
-- **MapStruct** (mapeamento de entidades)
-- **AWS RDS (PostgreSQL)** (banco de dados na nuvem)
-- **AWS S3** (armazenamento de imagens)
-- **AWS Security Manager** (gerenciamento seguro de senhas e segredos)
+![screenshot](https://i.ibb.co/9mXvWs99/Home-Adot-E.png)
 
-### Frontend
-- **React**
-- **Axios** (para requisições HTTP)
+## Sobre o projeto 💻
 
-### Arquitetura
-O projeto segue o conceito de **Clean Architecture**, garantindo:
-- **Separação entre camadas Core e Infrastructure**
-- **Independência do Core em relação à infraestrutura**
-- **Ausência de anotações no Core**
+O AdotE nasceu com um propósito simples: **facilitar o processo de adoção de animais e fortalecer o trabalho incrível que tantas ONGs já realizam todos os dias**. Sabemos que muitas dessas organizações usam redes sociais como Instagram e Facebook para divulgar animais e arrecadar doações — e isso faz total sentido, já que é onde o público está. Por isso, o AdotE não quer substituir esse trabalho, mas sim ser uma extensão prática e eficiente dele.
 
-## Como Executar o Projeto
+Desenvolvemos uma plataforma intuitiva, com um fluxo de cadastro pensado para ser tão simples quanto postar em uma rede social. Cada ONG pode criar seu perfil, cadastrar animais para adoção de forma rápida e ainda incluir sua chave Pix, com geração automática de QR Code para facilitar doações.
 
-### Pré-requisitos
-- **Java 17+**
-- **PostgreSQL (caso esteja rodando localmente)**
-- **AWS CLI instalado**
-- **Credenciais da AWS com permissão para acessar o AWS Secrets Manager**
+Outro ponto forte do AdotE é a centralização: ao reunir em um só lugar diversos animais disponíveis para adoção, **oferecemos aos adotantes uma busca mais organizada, segura e com filtros úteis como estado, cidade e espécie**. Isso ajuda a conectar quem quer adotar com quem precisa de apoio — de forma mais rápida, eficiente e com mais alcance.
+
+Além disso, estamos construindo esse projeto lado a lado com as ONGs. Nosso plano de engajamento inclui contato direto com as organizações, escuta ativa das suas necessidades reais e adaptação constante da plataforma. Queremos que o AdotE seja visto como uma ferramenta aliada — acessível, funcional e feita sob medida para o dia a dia corrido e desafiador de quem luta por causas animais.
+
+Juntos, podemos tornar a adoção mais fácil, acessível e humana para todos 🐾
+
+## Tecnologias Utilizadas 🚀
+
+#### FrontEnd
+
+- ReactJS
+- TypeScript
+- Tailwind CSS
+- Shadcn
+- Axios
+- Zod
+- React Hook Form
+- Zustand
+- React Router Dom
+- React Leaflet
+
+#### BackEnd
+
+Tecnologias utilizadas no back-end:
+
+- Java 17
+- Spring Boot
+- Spring Security
+- Spring Web
+- Spring Data JPA
+- Hibernate
+- PostgreSQL
+- Flyway (controle de versão do banco de dados)
+- JWT (autenticação e autorização)
+- BCrypt (hash de senhas)
+- WebSocket (notificações em tempo real)
+- Mailgun API (envio de e-mails com templates dinâmicos)
+- AWS EC2 (deploy da aplicação)
+- AWS Secrets Manager (segurança de credenciais)
+- Caffeine (cache em memória)
+- Rate Limiting por IP (prevenção de spam/abuso)
+- Maven
+- GitHub Actions (CI/CD)
 
 ---
 
-### Passos
-#### **1. Clone o repositório:**
-```sh
- git clone https://github.com/FelipeWai/adoteApi.git
- cd adote
-```
+## Funcionalidades do Projeto ✏️
 
-#### **2. Configure as credenciais da AWS**
-Se você já tem a AWS CLI instalada, pode configurar as credenciais com:
-```sh
- aws configure
-```
+- **Cadastro de Organizações e Login**: Organizações podem criar uma conta de forma simples e rápida. Após o cadastro, elas têm acesso completo à área administrativa da plataforma, podendo gerenciar seus animais e informações com total autonomia e segurança.
 
-Isso pedirar:
-- **AWS Access Key ID**
-- **AWS Secret Access Key**
-- **Região padrão (ex: us-east-2, região que você estiver usando)**
-- **Formato de saída (deixe padrão como JSON)**
+- **Cadastro de Animais**: O processo de cadastro de animais no AdotE é simples e completo, desenvolvido para facilitar o dia a dia das organizações e garantir que os adotantes encontrem todas as informações necessárias em um só lugar. Ao cadastrar um novo animal, a organização pode preencher um formulário detalhado com dados como nome, tipo (cachorro ou gato), idade, sexo, porte, além de marcar se o animal está vacinado, castrado, vermifugado e se é sem raça definida (SRD). Também é possível incluir uma descrição mais pessoal sobre o pet, destacando sua história, temperamento ou necessidades específicas — tudo isso acompanhado de fotos.
 
-💡 **Dica**: Caso você não sabe se possui estas credenciais cadastradas você pode digitar "aws configure list", 
-isso irá retornar as credenciais caso existam
+- **Dashboard da Organização**: Ao fazer login, a organização tem acesso a um painel exclusivo onde pode visualizar todos os seus animais cadastrados. Através do dashboard, é possível editar ou excluir perfis de animais já cadastrados, mantendo as informações sempre atualizadas.
 
-#### **3. Execute a aplicação**
-```sh
- mvn spring-boot:run
-```
+- **Busca com Filtros Personalizados**: Na página principal, os usuários encontram uma listagem com todos os animais disponíveis para adoção, acompanhada de filtros por estado, cidade, espécie e outros critérios. Isso facilita a busca e aumenta as chances de adoções mais assertivas.
 
----
-Agora sua API está pronta para rodar localmente! 🚀
+- **Lista de Organizações Cadastradas**: Além dos animais, os usuários também podem explorar as Organizações participantes do projeto. A listagem de organizações pode ser filtrada por estado e cidade, permitindo que os adotantes conheçam o trabalho das instituições próximas de onde vivem.
 
+- **Página Exclusiva para Cada Organização**: Cada organização cadastrada conta com uma página dedicada, onde são exibidos todos os animais sob sua responsabilidade, além de informações institucionais e a chave Pix da organização, com geração automática de QR Code para doações rápidas e seguras.
 
+- **Formulário de Adoção e Gerenciamento de Pedidos**: Os usuários podem preencher um formulário de adoção diretamente na página do animal desejado. Assim que o formulário é enviado, o adotante recebe um e-mail de confirmação e a ONG é notificada automaticamente. No painel administrativo da organização, há uma tela exclusiva onde é possível visualizar todos os formulários recebidos, organizados por animal. A ONG pode analisar as informações enviadas e optar por **aceitar** ou **recusar** o pedido. Em ambos os casos, o adotante é notificado por e-mail com a resposta.
 
-## Documentação da API
-A API está documentada utilizando **Swagger**. Para acessar a documentação localmente, inicie a aplicação e acesse:
-```
-http://localhost:8080/swagger-ui.html
-```
+## Como Contribuir 🤝
+
+Se você deseja contribuir para o projeto, siga as instruções abaixo:
+
+- Fork este repositório.
+- Crie uma nova branch com suas alterações: `git checkout -b minha-branch`.
+- Faça as alterações desejadas e faça commit: `git commit -m 'minhas alterações'`.
+- Envie suas alterações para a branch principal: `git push origin minha-branch`.
+- Abra um Pull Request para que suas alterações sejam revisadas.
+
+## Feedback 💌
+
+Se você tiver algum feedback, por favor me deixe saber por meio de joaopedroolive@hotmail.com
 
 ## Participantes do projeto
 - Felipe Wai: [LinkedIn](https://www.linkedin.com/in/felipewai/)
@@ -85,4 +111,3 @@ http://localhost:8080/swagger-ui.html
 - Samuel Vinicius M.: [LinkedIn](https://www.linkedin.com/in/samuel-vinicius-martins-032927205/)
 - Cainã Nuada: [LinkedIn](https://www.linkedin.com/in/cain%C3%A3-nuada-de-ara%C3%BAjo-magalh%C3%A3es-1a4871246/)
 - Samuel Prado: [LinkedIn](https://www.linkedin.com/in/samuel-prado-489b051b5/)
----
