@@ -1,6 +1,5 @@
 package com.adote.api.infra.presentation;
 
-import com.adote.api.infra.dtos.formulario.response.FormularioResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -11,8 +10,8 @@ public class NotificationController {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    public void notifyOrganization(Long organizationId) {
+    public void notifyOrganization(Long organizationId, String nomeAnimal) {
         String destination = "/topic/ong/" + organizationId + "/formulario";
-        messagingTemplate.convertAndSend(destination, "Formulário novo recebido");
+        messagingTemplate.convertAndSend(destination, "Formulário novo recebido para animal: " + nomeAnimal);
     }
 }

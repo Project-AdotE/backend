@@ -126,7 +126,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                 adotanteTemplateModel
         );
 
-        notificationController.notifyOrganization(organizacao.id());
+        notificationController.notifyOrganization(organizacao.id(), animal.nome());
     }
 
 
