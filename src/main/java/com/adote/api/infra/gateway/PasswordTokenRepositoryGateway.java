@@ -62,18 +62,12 @@ public class PasswordTokenRepositoryGateway implements PasswordTokenGateway {
 
         emailService.sendHtmlEmail("felipewai.dev@gmail.com", "Reset Password Token", templateModel);
 
-        SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
+        emailService.sendHtmlEmail(
                 org.email(),
                 "Token para troca de senha",
                 "resetPasswordEmail",
                 templateModel
         );
-
-        if (resultAdotante != null && resultAdotante.getMessageId() != null) {
-            System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
-        } else {
-            System.out.println("Falha ao enviar email para adotante");
-        }
     }
 
     @Override

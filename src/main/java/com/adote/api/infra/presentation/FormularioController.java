@@ -1,6 +1,5 @@
 package com.adote.api.infra.presentation;
 
-import com.adote.api.core.entities.Formulario;
 import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
 import com.adote.api.core.usecases.formulario.get.AnimaisComFormByOrgUseCase;
 import com.adote.api.core.usecases.formulario.get.GetAllFormsByAnimalIdUseCase;
@@ -12,10 +11,10 @@ import com.adote.api.infra.dtos.formulario.request.FormularioRequestDTO;
 import com.adote.api.infra.dtos.formulario.request.MensagemRecusaDTO;
 import com.adote.api.infra.dtos.formulario.response.AnimalComFormResponseDTO;
 import com.adote.api.infra.dtos.formulario.response.FormularioResponseDTO;
+import com.adote.api.infra.service.RateLimiterService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +34,7 @@ public class FormularioController {
     private final CreateFormularioUseCase createFormularioUseCase;
 
     private final TokenService tokenService;
+    private final RateLimiterService rateLimiterService;
 
     @GetMapping("/animal/{id}")
     public ResponseEntity<List<FormularioResponseDTO>> findAllByAnimalId(@PathVariable Long id) {
@@ -54,7 +54,14 @@ public class FormularioController {
 
 
     @PostMapping
-    public ResponseEntity<Void> createFormulario(@RequestBody @Valid FormularioRequestDTO formularioRequestDTO) {
+    public ResponseEntity<String> createFormulario(@RequestBody @Valid FormularioRequestDTO formularioRequestDTO,
+                                                 HttpServletRequest request) {
+
+        if (!rateLimiterService.isAllowed(request)) {
+            return ResponseEntity
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("Limite de envios excedido. Tente novamente mais tarde.");
+        }
         createFormularioUseCase.execute(formularioRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

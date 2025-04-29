@@ -102,39 +102,26 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         orgTemplateModel.put("dataEnvio", saved.getDataEnvio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         orgTemplateModel.put("painelUrl", "https://seusite.com/painel/formularios/" + saved.getId());
 
-        SendEmailResult resultOrg = emailService.sendHtmlEmailWithResult(
+        emailService.sendHtmlEmail(
                 organizacao.email(),
                 "Novo Formulário de Adoção Recebido",
                 "novoFormularioRecebidoEmail",
                 orgTemplateModel
         );
 
-        if (resultOrg != null && resultOrg.getMessageId() != null) {
-            System.out.println("Email para organização enviado com sucesso: " + resultOrg.getMessageId());
-
-            Map<String, Object> adotanteTemplateModel = new HashMap<>();
-            adotanteTemplateModel.put("nomeAdotante", formularioRequestDTO.nomeAdotante());
-            adotanteTemplateModel.put("nomeAnimal", animal.nome());
-            adotanteTemplateModel.put("tipoAnimal", animal.tipo().toString());
-            adotanteTemplateModel.put("nomeOrganizacao", organizacao.nome());
-            adotanteTemplateModel.put("emailOrganizacao", organizacao.email());
-            adotanteTemplateModel.put("telefoneOrganizacao", organizacao.numero());
-
-            SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
-                    formularioRequestDTO.email(),
-                    "Seu Formulário de Adoção foi Enviado com Sucesso",
-                    "formularioEnviadoConfirmacaoEmail",
-                    adotanteTemplateModel
-            );
-
-            if (resultAdotante != null && resultAdotante.getMessageId() != null) {
-                System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
-            } else {
-                System.out.println("Falha ao enviar email para adotante");
-            }
-        } else {
-            System.out.println("Falha ao enviar email para organização");
-        }
+        Map<String, Object> adotanteTemplateModel = new HashMap<>();
+        adotanteTemplateModel.put("nomeAdotante", formularioRequestDTO.nomeAdotante());
+        adotanteTemplateModel.put("nomeAnimal", animal.nome());
+        adotanteTemplateModel.put("tipoAnimal", animal.tipo().toString());
+        adotanteTemplateModel.put("nomeOrganizacao", organizacao.nome());
+        adotanteTemplateModel.put("emailOrganizacao", organizacao.email());
+        adotanteTemplateModel.put("telefoneOrganizacao", organizacao.numero());
+        emailService.sendHtmlEmail(
+                formularioRequestDTO.email(),
+                "Seu Formulário de Adoção foi Enviado com Sucesso",
+                "formularioEnviadoConfirmacaoEmail",
+                adotanteTemplateModel
+        );
     }
 
 
@@ -230,18 +217,12 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         templateModel.put("emailOrganizacao", formulario.getOrganizacao().getEmail());
         templateModel.put("telefoneOrganizacao", formulario.getOrganizacao().getNumero());
 
-        SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
+        emailService.sendHtmlEmail(
                 formulario.getEmail(),
                 "Parabéns! Seu formulário de adoção foi aprovado",
                 "formularioAceitoEmail",
                 templateModel
         );
-
-        if (resultAdotante != null && resultAdotante.getMessageId() != null) {
-            System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
-        } else {
-            System.out.println("Falha ao enviar email para adotante");
-        }
     }
 
     @Override
@@ -270,7 +251,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         templateModel.put("telefoneOrganizacao", formulario.getOrganizacao().getNumero());
         templateModel.put("mensagemRecusa", mensagemRecusaDTO.mensagem());
 
-        SendEmailResult resultAdotante = emailService.sendHtmlEmailWithResult(
+        emailService.sendHtmlEmail(
                 formulario.getEmail(),
                 "Infelizmente seu formulário de adoção foi recusado",
                 "formularioRecusadoEmail",
@@ -279,11 +260,5 @@ public class FormularioRepositoryGateway implements FormularioGateway {
 
         respostasRepository.deleteByFormulario_Id(formulario.getId());
         formularioRepository.deleteById(formulario.getId());
-
-        if (resultAdotante != null && resultAdotante.getMessageId() != null) {
-            System.out.println("Email para adotante enviado com sucesso: " + resultAdotante.getMessageId());
-        } else {
-            System.out.println("Falha ao enviar email para adotante");
-        }
     }
 }
