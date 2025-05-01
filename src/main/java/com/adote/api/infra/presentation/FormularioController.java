@@ -1,6 +1,7 @@
 package com.adote.api.infra.presentation;
 
 import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
+import com.adote.api.core.usecases.formulario.delete.DeleteFormularioByIdUseCase;
 import com.adote.api.core.usecases.formulario.get.AnimaisComFormByOrgUseCase;
 import com.adote.api.core.usecases.formulario.get.GetAllFormsByAnimalIdUseCase;
 import com.adote.api.core.usecases.formulario.post.AceitarFormularioByIdUseCase;
@@ -30,6 +31,7 @@ public class FormularioController {
     private final GetAllFormsByAnimalIdUseCase getAllFormsByAnimalIdUseCase;
     private final RecusarFormularioUseCase recusarFormularioUseCase;
     private final AnimaisComFormByOrgUseCase animaisComFormByOrgUseCase;
+    private final DeleteFormularioByIdUseCase deleteFormularioByIdUseCase;
 
     private final CreateFormularioUseCase createFormularioUseCase;
 
@@ -78,6 +80,13 @@ public class FormularioController {
         Long tokenOrgId = tokenService.getOrganizacaoId();
         recusarFormularioUseCase.execute(mensagemRecusaDTO, id, tokenOrgId);
         return ResponseEntity.ok("Recusado com sucesso");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarFormById(@PathVariable Long id){
+        Long tokenOrgId = tokenService.getOrganizacaoId();
+        deleteFormularioByIdUseCase.execute(id, tokenOrgId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.adote.api.infra.config.usecases;
 
+import com.adote.api.core.usecases.formulario.delete.DeleteFormularioByIdUseCase;
+import com.adote.api.core.usecases.formulario.delete.DeleteFormularioByIdUseCaseImpl;
 import com.adote.api.core.usecases.formulario.get.AnimaisComFormByOrgUseCase;
 import com.adote.api.core.usecases.formulario.get.AnimaisComFormByOrgUseCaseImpl;
 import com.adote.api.core.usecases.formulario.get.GetAllFormsByAnimalIdUseCase;
@@ -39,6 +41,11 @@ public class FormularioUseCasesConfig {
     @Bean
     public RecusarFormularioUseCase recusarFormularioUseCase() {
         return new RecusarFormularioUseCaseImpl(formularioRepositoryGateway);
+    }
+
+    @Bean
+    public DeleteFormularioByIdUseCase deleteFormularioByIdUseCase() {
+        return new DeleteFormularioByIdUseCaseImpl(formularioRepositoryGateway);
     }
 
 }

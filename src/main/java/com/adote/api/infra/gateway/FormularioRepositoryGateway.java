@@ -270,10 +270,18 @@ public class FormularioRepositoryGateway implements FormularioGateway {
 
     @Override
     public void deleteFormularioById(Long id, Long tokenOrgId) {
-        Optional<FormularioEntity> formularioEntity = formularioRepository.findById(id);
+        FormularioEntity formularioEntity = formularioRepository.findById(id)
+                .orElseThrow(() -> new FormularioNotFoundException(id.toString()));
 
-        if (formularioEntity.isEmpty()){
-            throw new FormularioAlreadyExistsException(id.toString());
+        if(!tokenOrgId.equals(formularioEntity.getOrganizacao().getId())){
+            throw new UnauthorizedAccessException("VocÊ não tem permissão para excluir esse formulário");
         }
+
+        if(formularioEntity.getStatus() == StatusFormularioEnum.PENDENTE){
+            throw new UnauthorizedAccessException("É necessário recusar ou aprovar o formulário");
+        }
+
+        formularioRepository.deleteById(id);
+        respostasRepository.deleteByFormulario_Id(id);
     }
 }
