@@ -39,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -265,5 +266,14 @@ public class FormularioRepositoryGateway implements FormularioGateway {
 
         respostasRepository.deleteByFormulario_Id(formulario.getId());
         formularioRepository.deleteById(formulario.getId());
+    }
+
+    @Override
+    public void deleteFormularioById(Long id, Long tokenOrgId) {
+        Optional<FormularioEntity> formularioEntity = formularioRepository.findById(id);
+
+        if (formularioEntity.isEmpty()){
+            throw new FormularioAlreadyExistsException(id.toString());
+        }
     }
 }

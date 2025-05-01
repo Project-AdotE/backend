@@ -15,6 +15,8 @@ public interface FormularioGateway {
 
     void recusarFormularioById(MensagemRecusaDTO mensagemRecusaDTO, Long id, Long tokenOrgId);
 
+    void deleteFormularioById(Long id, Long tokenOrgId);
+
     List<FormularioResponseDTO> getFormulariosByAnimalId(Long animalId, Long tokenOrgId);
 
     List<AnimalComFormResponseDTO> getAnimalComFormByOrganizacaoId(Long organizacaoId);
