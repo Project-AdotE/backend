@@ -39,6 +39,9 @@ public record AnimalRequestDTO(
         @NotNull(message = "É necessário informar se o animal é SRD")
         Boolean srd,
 
+        @NotNull(message = "É necessário informar se o animal esta adotado")
+        Boolean adotado,
+
         @NotBlank(message = "A descrição do animal é obrigatória")
         @Size(min = 300, max = 500, message = "A descrição deve ter entre 300 e 500 caracteres")
         String descricao,

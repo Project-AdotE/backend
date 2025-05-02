@@ -60,6 +60,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
         AnimalEntity animalEntity = animalMapper.toEntity(animalRequestDTO);
         animalEntity.setOrganizacao(organizacaoMapper.toEntity(organizacao));
+        animalEntity.setAdotado(Boolean.FALSE);
 
         AnimalEntity savedAnimal = animalRepository.save(animalEntity);
 

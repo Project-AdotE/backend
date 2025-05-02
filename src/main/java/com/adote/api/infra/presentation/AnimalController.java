@@ -62,6 +62,8 @@ public class AnimalController {
         filter.setIdade(idade);
         filter.setPorte(porte);
         filter.setSexo(sexo);
+        filter.setCidade(cidade);
+        filter.setEstado(estado);
 
         Pageable pageable = PageRequest.of(page, 20);
 
