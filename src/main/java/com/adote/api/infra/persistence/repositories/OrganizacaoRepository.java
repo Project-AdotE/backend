@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface OrganizacaoRepository extends JpaRepository<OrganizacaoEntity, Long>, JpaSpecificationExecutor<OrganizacaoEntity> {
     Optional<UserDetails> getOrganizacaoEntityByEmail(String email);
+
     Page<OrganizacaoEntity> findAll(Pageable pageable);
 
     Optional<OrganizacaoEntity> findByCnpj(String cnpj);

@@ -9,6 +9,7 @@ import com.adote.api.infra.dtos.organizacao.response.OrganizacaoBaseDTO;
 import com.adote.api.infra.dtos.page.response.PageResponseDTO;
 import com.adote.api.infra.filters.organizacao.OrganizacaoFilter;
 import com.adote.api.infra.mappers.OrganizacaoMapper;
+import com.adote.api.infra.persistence.repositories.AnimalRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,8 @@ public class OrganizacaoController {
     private final GetOrganizacaoById getOrganizacaoById;
     private final GetAllOrganizacoesCase getAllOrganizacoesCase;
     private final DeleteOrganizacaoById deleteOrganizacaoById;
+
+    private final AnimalRepository animalRepository;
 
     private final TokenService tokenService;
 
@@ -65,7 +68,16 @@ public class OrganizacaoController {
     @GetMapping("/{id}")
     public ResponseEntity<OrganizacaoBaseDTO> getOrganizacaoById(@PathVariable Long id) {
         Organizacao organizacao = getOrganizacaoById.execute(id);
-        return ResponseEntity.ok(organizacaoMapper.toBaseDTO(organizacao));
+        OrganizacaoBaseDTO dto = organizacaoMapper.toBaseDTO(organizacao);
+
+        Long totalAdotados = animalRepository.countAdotadosByOrganizacao(id);
+        dto = new OrganizacaoBaseDTO(
+                dto.id(), dto.nome(), dto.numero(), dto.cnpj(),
+                dto.endereco(), dto.chavesPix(), dto.email(),
+                totalAdotados
+        );
+
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")

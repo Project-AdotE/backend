@@ -12,5 +12,6 @@ public record OrganizacaoBaseDTO(
         String cnpj,
         EnderecoResponseDTO endereco,
         List<ChavePixSimplificadaDTO> chavesPix,
-        String email) {
+        String email,
+        Long animaisAdotados) {
 }
