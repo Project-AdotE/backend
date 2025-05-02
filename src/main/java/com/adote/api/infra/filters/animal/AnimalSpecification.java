@@ -39,7 +39,6 @@ public class AnimalSpecification implements Specification<AnimalEntity> {
             predicates.add(cb.equal(root.get("organizacao").get("id"), filter.getOrganizacaoId()));
         }
 
-        // JOIN com organização → endereço
         Join<Object, Object> organizacaoJoin = root.join("organizacao");
         Join<Object, Object> enderecoJoin = organizacaoJoin.join("endereco");
 

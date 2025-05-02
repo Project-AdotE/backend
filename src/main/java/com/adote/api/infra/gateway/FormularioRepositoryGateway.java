@@ -63,8 +63,8 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         Animal animal = getAnimalByIdCase.execute(formularioRequestDTO.idAnimal());
         Organizacao organizacao = getOrganizacaoById.execute(formularioRequestDTO.idOrganizacao());
 
-        if(!formularioRepository.findByEmailAndAnimal_Id(formularioRequestDTO.email(), formularioRequestDTO.idAnimal()).isEmpty()
-                || !formularioRepository.findByCpfAndAnimal_Id(formularioRequestDTO.cpf(), formularioRequestDTO.idAnimal()).isEmpty()){
+        if(formularioRepository.existsByEmailAndAnimal_Id(formularioRequestDTO.email(), formularioRequestDTO.idAnimal())
+                || formularioRepository.existsByCpfAndAnimal_Id(formularioRequestDTO.cpf(), formularioRequestDTO.idAnimal())){
             throw new FormularioAlreadyExistsException("Email ou CPF já enviou formulario para este animal");
         }
 
