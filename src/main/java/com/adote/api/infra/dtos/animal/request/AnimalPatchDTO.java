@@ -39,6 +39,8 @@ public record AnimalPatchDTO(
         @Valid
         Optional<Boolean> srd,
 
+        Optional<Boolean> adotado,
+
         @Valid
         Optional<@NotBlank(message = "A descrição não pode estar em branco")
         @Size(min = 10, max = 500, message = "A descrição deve ter entre 10 e 500 caracteres") String> descricao

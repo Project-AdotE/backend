@@ -12,5 +12,7 @@ public class AnimalFilter {
     private IdadeEnum idade;
     private PorteEnum porte;
     private SexoEnum sexo;
+    private String estado;
+    private String cidade;
     private Long organizacaoId;
 }

@@ -56,6 +56,9 @@ public class AnimalEntity {
     @Column(name = "srd", nullable = false)
     private Boolean srd;
 
+    @Column(name = "adotado", nullable = false)
+    private Boolean adotado;
+
     @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 

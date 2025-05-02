@@ -13,11 +13,12 @@ class NotificationControllerTest {
         NotificationController controller = new NotificationController(messagingTemplate);
 
         Long organizationId = 123L;
+        String nomeAnimal = "Animal";
         String expectedDestination = "/topic/ong/123/formulario";
-        String expectedMessage = "Formulário novo recebido";
+        String expectedMessage = "Formulário novo recebido para animal: Animal";
 
         // Act
-        controller.notifyOrganization(organizationId);
+        controller.notifyOrganization(organizationId, nomeAnimal);
 
         // Assert
         verify(messagingTemplate, times(1)).convertAndSend(expectedDestination, expectedMessage);

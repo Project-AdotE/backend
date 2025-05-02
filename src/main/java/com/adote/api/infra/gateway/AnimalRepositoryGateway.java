@@ -87,7 +87,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
     public Animal updateAnimal(Long id, AnimalPatchDTO animalRequestDTO,
                                List<MultipartFile> novasFotos, List<String> fotosParaRemover, Long tokenOrgId) {
 
-        AnimalEntity animalEntity = animalRepository.findById(id)
+        AnimalEntity animalEntity = animalRepository.findByIdAndAdotadoFalse(id)
                 .orElseThrow(() -> new AnimalNotFoundException(id.toString()));
 
         if (!tokenOrgId.equals(animalEntity.getOrganizacao().getId())) {
@@ -104,6 +104,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
         animalRequestDTO.castrado().ifPresent(animalEntity::setCastrado);
         animalRequestDTO.vermifugado().ifPresent(animalEntity::setVermifugado);
         animalRequestDTO.srd().ifPresent(animalEntity::setSrd);
+        animalRequestDTO.adotado().ifPresent(animalEntity::setAdotado);
 
         animalRepository.save(animalEntity);
 
@@ -145,14 +146,14 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     @Override
     public Optional<Animal> getAnimalById(Long id) {
-        Optional<AnimalEntity> animalOpt = animalRepository.findById(id);
+        Optional<AnimalEntity> animalOpt = animalRepository.findByIdAndAdotadoFalse(id);
         return animalOpt.map(animalMapper::toAnimal);
     }
 
     @Transactional
     @Override
     public void deleteAnimalById(Long id, Long tokenOrgId) {
-        Optional<AnimalEntity> animalOptional = animalRepository.findById(id);
+        Optional<AnimalEntity> animalOptional = animalRepository.findByIdAndAdotadoFalse(id);
         if(animalOptional.isEmpty()){
             throw new AnimalNotFoundException(id.toString());
         }

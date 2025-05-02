@@ -53,6 +53,8 @@ public class AnimalController {
             @RequestParam(required = false) IdadeEnum idade,
             @RequestParam(required = false) PorteEnum porte,
             @RequestParam(required = false) SexoEnum sexo,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String cidade,
             @RequestParam(defaultValue = "0") int page) {
 
         AnimalFilter filter = new AnimalFilter();
@@ -150,6 +152,8 @@ public class AnimalController {
 
         return ResponseEntity.ok(animalMapper.toResponseDTO(updatedAnimal));
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAnimalById(@PathVariable Long id) {

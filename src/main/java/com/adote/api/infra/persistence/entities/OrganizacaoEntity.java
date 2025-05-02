@@ -43,15 +43,15 @@ public class OrganizacaoEntity implements UserDetails {
     private String senha;
 
     @OneToMany(mappedBy = "organizacao",
-                cascade = CascadeType.ALL,
-                orphanRemoval = true,
-                fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<AnimalEntity> animais;
 
     @OneToMany(mappedBy = "organizacao",
-                cascade = CascadeType.ALL,
-                orphanRemoval = true,
-                fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<ChavePixEntity> chavesPix;
 
 
