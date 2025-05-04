@@ -104,7 +104,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
         orgTemplateModel.put("telefoneAdotante", formularioRequestDTO.telefone());
         orgTemplateModel.put("idadeAdotante", formularioRequestDTO.idade());
         orgTemplateModel.put("dataEnvio", saved.getDataEnvio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-        orgTemplateModel.put("painelUrl", "https://seusite.com/painel/formularios/" + saved.getId());
+        orgTemplateModel.put("painelUrl", "https://main.d99l6n0fah3sa.amplifyapp.com/dashboard/" + saved.getId());
 
         emailService.sendHtmlEmail(
                 organizacao.email(),
