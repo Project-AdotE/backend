@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
-import org.springframework.web.socket.WebSocketHttpHeaders;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class WebSocketIntegrationTest {
 
     @LocalServerPort
@@ -45,7 +46,6 @@ public class WebSocketIntegrationTest {
                     }
                 });
 
-                // Envia mensagem de teste (ou poderia disparar criação de formulário real)
                 session.send("/topic/ong/123/formulario", "Formulário novo recebido");
             }
         };

@@ -8,7 +8,6 @@ class NotificationControllerTest {
 
     @Test
     void deveEnviarMensagemParaOngCorreta() {
-        // Arrange
         SimpMessagingTemplate messagingTemplate = mock(SimpMessagingTemplate.class);
         NotificationController controller = new NotificationController(messagingTemplate);
 
@@ -17,10 +16,8 @@ class NotificationControllerTest {
         String expectedDestination = "/topic/ong/123/formulario";
         String expectedMessage = "Formulário novo recebido para animal: Animal";
 
-        // Act
         controller.notifyOrganization(organizationId, nomeAnimal);
 
-        // Assert
         verify(messagingTemplate, times(1)).convertAndSend(expectedDestination, expectedMessage);
     }
 
