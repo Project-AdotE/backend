@@ -2,7 +2,6 @@ package com.adote.api.infra.gateway;
 
 import com.adote.api.core.Enums.StatusFormularioEnum;
 import com.adote.api.core.entities.Animal;
-import com.adote.api.core.entities.Formulario;
 import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
 import com.adote.api.core.exceptions.formulario.FormularioAlreadyExistsException;
@@ -26,20 +25,16 @@ import com.adote.api.infra.persistence.repositories.FormularioRepository;
 import com.adote.api.infra.persistence.repositories.RespostasRepository;
 import com.adote.api.infra.presentation.NotificationController;
 import com.adote.api.infra.service.EmailService;
-import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -68,6 +63,8 @@ public class FormularioRepositoryGateway implements FormularioGateway {
             throw new FormularioAlreadyExistsException("Email ou CPF já enviou formulario para este animal");
         }
 
+        ZonedDateTime dataEnvio = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
         FormularioEntity formularioEntity = FormularioEntity.builder()
                 .animal(animalMapper.toEntity(animal))
                 .organizacao(organizacaoMapper.toEntity(organizacao))
@@ -77,7 +74,7 @@ public class FormularioRepositoryGateway implements FormularioGateway {
                 .telefone(formularioRequestDTO.telefone())
                 .cpf(formularioRequestDTO.cpf())
                 .status(StatusFormularioEnum.PENDENTE)
-                .dataEnvio(LocalDateTime.now())
+                .dataEnvio(dataEnvio.toLocalDateTime())
                 .build();
 
         FormularioEntity saved = formularioRepository.save(formularioEntity);
@@ -211,8 +208,10 @@ public class FormularioRepositoryGateway implements FormularioGateway {
             throw new UnauthorizedAccessException("O formulário já foi processado anteriormente");
         }
 
+        ZonedDateTime dataEnvio = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
         formulario.setStatus(StatusFormularioEnum.APROVADO);
-        formulario.setDataResposta(LocalDateTime.now());
+        formulario.setDataResposta(dataEnvio.toLocalDateTime());
         formularioRepository.save(formulario);
 
         Map<String, Object> templateModel = new HashMap<>();
@@ -244,8 +243,10 @@ public class FormularioRepositoryGateway implements FormularioGateway {
             throw new UnauthorizedAccessException("O formulário já foi processado anteriormente");
         }
 
+        ZonedDateTime dataEnvio = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
         formulario.setStatus(StatusFormularioEnum.RECUSADO);
-        formulario.setDataResposta(LocalDateTime.now());
+        formulario.setDataResposta(dataEnvio.toLocalDateTime());
         formularioRepository.save(formulario);
 
         Map<String, Object> templateModel = new HashMap<>();
