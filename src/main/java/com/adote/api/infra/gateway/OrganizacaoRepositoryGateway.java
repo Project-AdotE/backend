@@ -48,17 +48,17 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
 
     @Override
     public Organizacao createOrganizacao(Organizacao organizacao) {
-        if(getOrganizacaoByCnpj(organizacao.cnpj()).isPresent()) {
+        if (organizacaoRepository.findByCnpj(organizacao.cnpj()).isPresent()) {
             throw new CnpjAlreadyExistsException(organizacao.cnpj());
         }
-        if(getOrganizacaoByEmail(organizacao.email()).isPresent()) {
+
+        if (organizacaoRepository.findByEmail(organizacao.email()).isPresent()) {
             throw new EmailAlreadyExistsException(organizacao.email());
         }
 
         OrganizacaoEntity organizacaoEntity = organizacaoMapper.toEntity(organizacao);
         organizacaoEntity.setSenha(passwordEncoder.encode(organizacaoEntity.getSenha()));
-        Organizacao organizacaoFinal = organizacaoMapper.toOrganizacao(organizacaoRepository.save(organizacaoEntity));
-        return organizacaoFinal;
+        return organizacaoMapper.toOrganizacao(organizacaoRepository.save(organizacaoEntity));
     }
 
     @Override
@@ -69,9 +69,10 @@ public class OrganizacaoRepositoryGateway implements OrganizacaoGateway {
 
     @Override
     public void deleteOrganizacaoById(Long id) {
-        if(getOrganizacaoById(id).isEmpty()) {
+        if(organizacaoRepository.existsById(id)) {
+            organizacaoRepository.deleteById(id);
+        }else{
             throw new OrganizacaoNotFoundException(id.toString());
         }
-        organizacaoRepository.deleteById(id);
     }
 }

@@ -54,7 +54,6 @@ public class OrganizacaoEntity implements UserDetails {
             fetch = FetchType.LAZY)
     private List<ChavePixEntity> chavesPix;
 
-
     @Override
     public boolean isEnabled() {
         return true;
