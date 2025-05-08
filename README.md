@@ -62,6 +62,7 @@ Tecnologias utilizadas no back-end:
 - PostgreSQL
 - Flyway (controle de versão do banco de dados)
 - JWT (autenticação e autorização)
+- Testes Unitários com JUnit5 e Mockito
 - BCrypt (hash de senhas)
 - WebSocket (notificações em tempo real)
 - Mailgun API (envio de e-mails com templates dinâmicos)
