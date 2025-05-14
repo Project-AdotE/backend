@@ -14,4 +14,6 @@ public interface FormularioRepository extends JpaRepository<FormularioEntity, Lo
     boolean existsByEmailAndAnimal_Id(String email, Long animalId);
 
     boolean existsByCpfAndAnimal_Id(String cpf, Long animalId);
+
+    List<FormularioEntity> findAllByAnimal_Id(Long animalId);
 }

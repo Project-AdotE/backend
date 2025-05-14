@@ -6,10 +6,14 @@ import com.adote.api.core.entities.Organizacao;
 import com.adote.api.core.exceptions.animal.AnimalNotFoundException;
 import com.adote.api.core.exceptions.auth.UnauthorizedAccessException;
 import com.adote.api.core.gateway.AnimalGateway;
+import com.adote.api.core.usecases.formulario.delete.DeleteFormularioByIdUseCase;
+import com.adote.api.core.usecases.formulario.get.GetAllFormsByAnimalIdUseCase;
 import com.adote.api.core.usecases.fotoAnimal.get.GetFotoByUrlCase;
 import com.adote.api.core.usecases.fotoAnimal.post.CreateMultipleFotosCase;
 import com.adote.api.core.usecases.organizacao.get.GetOrganizacaoById;
 import com.adote.api.infra.dtos.animal.request.AnimalPatchDTO;
+import com.adote.api.infra.persistence.entities.FormularioEntity;
+import com.adote.api.infra.persistence.repositories.FormularioRepository;
 import com.adote.api.infra.service.ImageOptimizationService;
 import com.adote.api.infra.config.aws.s3.S3StorageService;
 import com.adote.api.infra.dtos.animal.request.AnimalRequestDTO;
@@ -39,6 +43,7 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     private final FotoAnimalRepository fotoAnimalRepository;
     private final AnimalRepository animalRepository;
+    private final FormularioRepository formularioRepository;
 
     private final GetOrganizacaoById getOrganizacaoById;
 
@@ -47,7 +52,6 @@ public class AnimalRepositoryGateway implements AnimalGateway {
 
     private final S3StorageService s3StorageService;
     private final ImageOptimizationService imageOptimizationService;
-
 
     private final AnimalMapper animalMapper;
     private final OrganizacaoMapper organizacaoMapper;
@@ -106,6 +110,15 @@ public class AnimalRepositoryGateway implements AnimalGateway {
         animalRequestDTO.vermifugado().ifPresent(animalEntity::setVermifugado);
         animalRequestDTO.srd().ifPresent(animalEntity::setSrd);
         animalRequestDTO.adotado().ifPresent(animalEntity::setAdotado);
+
+        if(animalRequestDTO.adotado().isPresent() && animalRequestDTO.adotado().get()) {
+            List<FormularioEntity> formulariosAnimal = formularioRepository.findAllByAnimal_Id(animalEntity.getId());
+            if(!formulariosAnimal.isEmpty()) {
+                formulariosAnimal.forEach(formularioEntity -> {
+                    formularioRepository.deleteById(formularioEntity.getId());
+                });
+            }
+        }
 
         animalRepository.save(animalEntity);
 
